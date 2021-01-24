@@ -49,10 +49,11 @@ public class ProfessorDAO {
 	}
 
 	public void remove(Professor professor) {
-		final String query = String.format("DELETE FROM %s WHERE id=?", professor);
+		final String query = String.format("DELETE FROM %s WHERE id=?", tableName);
 
 		try (PreparedStatement statement = connection.prepareStatement(query)) {
 			statement.setLong(1, professor.getId());
+			statement.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
