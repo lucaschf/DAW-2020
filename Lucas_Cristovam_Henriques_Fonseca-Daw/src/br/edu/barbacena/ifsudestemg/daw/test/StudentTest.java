@@ -1,7 +1,7 @@
 package br.edu.barbacena.ifsudestemg.daw.test;
 
+import java.awt.Dimension;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
 
 import br.edu.barbacena.ifsudestemg.daw.dao.StudentDAO;
 import br.edu.barbacena.ifsudestemg.daw.model.Student;
@@ -59,8 +59,30 @@ public class StudentTest extends CrudTest {
 
 	@Override
 	void listAll() {
-		var message = String.join("\n", dao.fetchAll().stream().map(s -> s.toString()).collect(Collectors.toList()));
-		MessageDialog.showTextMessage("Alunos", message.isEmpty() ? "Nenhum aluno cadastrado" : message);
+		var students = dao.fetchAll();
+
+		if (students == null) {
+			MessageDialog.showErrorDialog(LIST, "Falha ao carregar alunos");
+			return;
+		}
+
+		if (students.isEmpty()) {
+			MessageDialog.showInformationDialog(LIST, "Nenhum aluno cadastrado");
+			return;
+		}
+
+		int colunsWidth[] = {
+				50, // id
+				120, // name
+				120, // email
+				80, // birhtDate
+				120, // address
+		};
+		
+		
+		var tableModel = new StudentTableModel(students);
+
+		MessageDialog.showDataTable(null, "Alunos", tableModel, colunsWidth, new Dimension(640, 400));
 	}
 
 	private Student readStudentData(String title) {
@@ -98,7 +120,7 @@ public class StudentTest extends CrudTest {
 
 		return student;
 	}
-	
+
 	public static void main(String[] args) {
 		new StudentTest().showMenu();
 	}

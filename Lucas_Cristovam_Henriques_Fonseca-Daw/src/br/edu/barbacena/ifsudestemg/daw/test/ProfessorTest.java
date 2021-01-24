@@ -1,6 +1,6 @@
 package br.edu.barbacena.ifsudestemg.daw.test;
 
-import java.util.stream.Collectors;
+import java.awt.Dimension;
 
 import br.edu.barbacena.ifsudestemg.daw.dao.ProfessorDAO;
 import br.edu.barbacena.ifsudestemg.daw.model.Professor;
@@ -58,8 +58,27 @@ public class ProfessorTest extends CrudTest {
 
 	@Override
 	void listAll() {
-		var message = String.join("\n", dao.fetchAll().stream().map(s -> s.toString()).collect(Collectors.toList()));
-		MessageDialog.showTextMessage("Professores", message.isEmpty() ? "Nenhum professor cadastrado" : message);
+		var professors = dao.fetchAll();
+
+		if (professors == null) {
+			MessageDialog.showErrorDialog(LIST, "Falha ao carregar professores");
+			return;
+		}
+
+		if (professors.isEmpty()) {
+			MessageDialog.showInformationDialog(LIST, "Nenhum professor cadastrado");
+			return;
+		}
+
+		int colunsWidth[] = { 50, // id
+				120, // name
+				120, // email
+				80, // degree
+		};
+
+		var tableModel = new ProfessorTableModel(professors);
+
+		MessageDialog.showDataTable(null, "Professores", tableModel, colunsWidth, new Dimension(640, 400));
 	}
 
 	private Professor readProfessorData(String title) {
@@ -93,5 +112,5 @@ public class ProfessorTest extends CrudTest {
 	public static void main(String[] args) {
 		new ProfessorTest().showMenu();
 	}
-	
+
 }

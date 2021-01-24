@@ -14,40 +14,45 @@ public class Student {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public Student setId(Long id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Student setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public Student setEmail(String email) {
 		this.email = email;
+		return this;
 	}
 
 	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public Student setAddress(String address) {
 		this.address = address;
+		return this;
 	}
 
 	public LocalDate getBirthDate() {
 		return birthDate;
 	}
 
-	public void setBirthDate(LocalDate birthDate) {
+	public Student setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
+		return this;
 	}
 
 	@Override
