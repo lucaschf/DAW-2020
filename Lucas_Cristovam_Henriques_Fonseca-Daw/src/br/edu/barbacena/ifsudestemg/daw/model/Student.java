@@ -3,13 +3,13 @@ package br.edu.barbacena.ifsudestemg.daw.model;
 import java.time.LocalDate;
 
 public class Student {
-	
+
 	private Long id;
 	private String name;
 	private String email;
 	private String address;
 	private LocalDate birthDate;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -37,7 +37,7 @@ public class Student {
 	public String getAddress() {
 		return address;
 	}
-	
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
@@ -49,5 +49,11 @@ public class Student {
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
-	
+
+	@Override
+	public String toString() {
+		return String.format("Student {id=%s, name=%s, email=%s, address=%s, birthDate=%s}", id, name, email, address,
+				birthDate);
+	}
+
 }

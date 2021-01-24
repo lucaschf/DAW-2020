@@ -20,15 +20,15 @@ public class StudentDAO {
 		this.connection = ConnectionFactory.getConnection();
 	}
 
-	public void add(Student aluno) {
+	public void add(Student student) {
 		final String query = String
 				.format("INSERT INTO %s (nome, email, endereco, datanascimento) values ( ?, ?, ?, ?);", tableName);
 
 		try (PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setString(1, aluno.getName());
-			statement.setString(2, aluno.getEmail());
-			statement.setString(3, aluno.getAddress());
-			statement.setDate(4, Date.valueOf(aluno.getBirthDate()));
+			statement.setString(1, student.getName());
+			statement.setString(2, student.getEmail());
+			statement.setString(3, student.getAddress());
+			statement.setDate(4, Date.valueOf(student.getBirthDate()));
 
 			statement.execute();
 		} catch (SQLException e) {
@@ -36,16 +36,16 @@ public class StudentDAO {
 		}
 	}
 
-	public void update(Student aluno) {
-		final String query = String.format("UPDATE %s SET nome=?, email=?, endereço=?, datanascimento=? WHERE id=?;",
+	public void update(Student student) {
+		final String query = String.format("UPDATE %s SET nome=?, email=?, endereco=?, datanascimento=? WHERE id=?;",
 				tableName);
 
 		try (PreparedStatement statement = connection.prepareStatement(query)) {
-			statement.setString(1, aluno.getName());
-			statement.setString(2, aluno.getEmail());
-			statement.setString(3, aluno.getAddress());
-			statement.setDate(4, Date.valueOf(aluno.getBirthDate()));
-			statement.setLong(5, aluno.getId());
+			statement.setString(1, student.getName());
+			statement.setString(2, student.getEmail());
+			statement.setString(3, student.getAddress());
+			statement.setDate(4, Date.valueOf(student.getBirthDate()));
+			statement.setLong(5, student.getId());
 
 			statement.execute();
 		} catch (SQLException e) {
@@ -67,7 +67,7 @@ public class StudentDAO {
 	public List<Student> fetchAll() {
 		final String query = "SELECT * FROM " + tableName;
 
-		List<Student> alunos = new ArrayList<>();
+		List<Student> students = new ArrayList<>();
 
 		try (PreparedStatement statement = connection.prepareStatement(query)) {
 			ResultSet rs = statement.executeQuery();
@@ -81,12 +81,12 @@ public class StudentDAO {
 				aluno.setAddress(rs.getString("endereco"));
 				aluno.setBirthDate(rs.getDate("datanascimento").toLocalDate());
 
-				alunos.add(aluno);
+				students.add(aluno);
 			}
 
 		} catch (SQLException e) {
 		}
 
-		return alunos;
+		return students;
 	}
 }

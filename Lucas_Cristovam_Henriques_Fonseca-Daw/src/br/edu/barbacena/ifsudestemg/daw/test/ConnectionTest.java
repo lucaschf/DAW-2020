@@ -9,10 +9,10 @@ public class ConnectionTest {
 	public static void main(String[] args) {
 		try {
 			Connection connection = ConnectionFactory.getConnection();
-			System.out.println("Conexão aberta!");
+			System.out.println("Connection was succesful!");
 			connection.close();
 		} catch (Exception e) {
-			System.out.println("Falha na conexão.");
+			System.out.println("Connection failed.");
 		}
 	}
 }

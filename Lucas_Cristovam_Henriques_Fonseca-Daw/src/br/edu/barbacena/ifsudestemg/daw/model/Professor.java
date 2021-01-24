@@ -39,4 +39,9 @@ public class Professor {
 		this.degree = degree;
 	}
 
+	@Override
+	public String toString() {
+		return "Professor {id=" + id + ", name=" + name + ", email=" + email + ", degree=" + degree + "}";
+	}
+
 }
