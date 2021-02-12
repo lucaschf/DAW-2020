@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.edu.barbacena.ifsudestemg.daw.dao.ProfessorDAO;
-import br.edu.barbacena.ifsudestemg.daw.model.Professor;
+import br.edu.ifsudestemg.barbacena.dao.ProfessorDAO;
+import br.edu.ifsudestemg.barbacena.model.Professor;
 
 public class AddProfessorServlet extends HttpServlet {
 

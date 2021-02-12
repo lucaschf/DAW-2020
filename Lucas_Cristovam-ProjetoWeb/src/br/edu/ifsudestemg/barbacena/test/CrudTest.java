@@ -1,4 +1,4 @@
-package br.edu.barbacena.ifsudestemg.daw.test;
+package br.edu.ifsudestemg.barbacena.test;
 
 import java.util.Arrays;
 

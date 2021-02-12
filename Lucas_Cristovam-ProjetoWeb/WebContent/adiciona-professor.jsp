@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +8,7 @@
 <title>Adiciona professor</title>
 </head>
 <body>
+	<c:import url="cabecalho.jsp" />
 	<form action="adicionaProfessor" method="post">
 		<p>
 			<label>Nome: </label> <input type="text" name="name" />
@@ -22,5 +26,6 @@
 			<input type="submit" value="Gravar" />
 		</p>
 	</form>
+	<c:import url="rodape.jsp" />
 </body>
 </html>

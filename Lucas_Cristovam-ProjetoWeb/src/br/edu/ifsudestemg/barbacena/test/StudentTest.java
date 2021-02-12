@@ -1,10 +1,10 @@
-package br.edu.barbacena.ifsudestemg.daw.test;
+package br.edu.ifsudestemg.barbacena.test;
 
 import java.awt.Dimension;
 import java.time.LocalDate;
 
-import br.edu.barbacena.ifsudestemg.daw.dao.StudentDAO;
-import br.edu.barbacena.ifsudestemg.daw.model.Student;
+import br.edu.ifsudestemg.barbacena.dao.StudentDAO;
+import br.edu.ifsudestemg.barbacena.model.Student;
 import tsi.too.io.InputDialog;
 import tsi.too.io.MessageDialog;
 

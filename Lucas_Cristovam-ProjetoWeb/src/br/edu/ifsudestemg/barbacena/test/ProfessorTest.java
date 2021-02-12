@@ -1,9 +1,9 @@
-package br.edu.barbacena.ifsudestemg.daw.test;
+package br.edu.ifsudestemg.barbacena.test;
 
 import java.awt.Dimension;
 
-import br.edu.barbacena.ifsudestemg.daw.dao.ProfessorDAO;
-import br.edu.barbacena.ifsudestemg.daw.model.Professor;
+import br.edu.ifsudestemg.barbacena.dao.ProfessorDAO;
+import br.edu.ifsudestemg.barbacena.model.Professor;
 import tsi.too.io.InputDialog;
 import tsi.too.io.MessageDialog;
 

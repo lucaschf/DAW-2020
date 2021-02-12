@@ -1,4 +1,4 @@
-package br.edu.barbacena.ifsudestemg.daw.model;
+package br.edu.ifsudestemg.barbacena.model;
 
 public class Professor {
 

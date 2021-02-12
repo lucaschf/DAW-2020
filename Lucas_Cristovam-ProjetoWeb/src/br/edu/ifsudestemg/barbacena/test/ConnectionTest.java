@@ -1,8 +1,8 @@
-package br.edu.barbacena.ifsudestemg.daw.test;
+package br.edu.ifsudestemg.barbacena.test;
 
 import java.sql.Connection;
 
-import br.edu.barbacena.ifsudestemg.daw.jdbc.ConnectionFactory;
+import br.edu.ifsudestemg.barbacena.jdbc.ConnectionFactory;
 
 public class ConnectionTest {
 	

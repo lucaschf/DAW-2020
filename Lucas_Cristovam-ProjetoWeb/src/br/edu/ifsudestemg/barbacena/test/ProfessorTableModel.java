@@ -1,10 +1,10 @@
-package br.edu.barbacena.ifsudestemg.daw.test;
+package br.edu.ifsudestemg.barbacena.test;
 
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import br.edu.barbacena.ifsudestemg.daw.model.Professor;
+import br.edu.ifsudestemg.barbacena.model.Professor;
 
 public class ProfessorTableModel extends AbstractTableModel {
 	private static final String DEGREE = "Grau de formação";

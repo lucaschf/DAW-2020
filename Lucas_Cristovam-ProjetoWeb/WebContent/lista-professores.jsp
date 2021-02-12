@@ -2,8 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
 	import="java.util.*,
-			br.edu.barbacena.ifsudestemg.daw.dao.*,
-			br.edu.barbacena.ifsudestemg.daw.model.*"%>
+			br.edu.ifsudestemg.barbacena.dao.*,
+			br.edu.ifsudestemg.barbacena.model.*"%>
 
 <html>
 <body>

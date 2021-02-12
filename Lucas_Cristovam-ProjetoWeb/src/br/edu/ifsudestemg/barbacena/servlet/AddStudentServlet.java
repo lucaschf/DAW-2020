@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.edu.barbacena.ifsudestemg.daw.dao.StudentDAO;
-import br.edu.barbacena.ifsudestemg.daw.model.Student;
+import br.edu.ifsudestemg.barbacena.dao.StudentDAO;
+import br.edu.ifsudestemg.barbacena.model.Student;
 
 public class AddStudentServlet extends HttpServlet {
 

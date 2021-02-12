@@ -1,4 +1,4 @@
-package br.edu.barbacena.ifsudestemg.daw.dao;
+package br.edu.ifsudestemg.barbacena.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.edu.barbacena.ifsudestemg.daw.jdbc.ConnectionFactory;
-import br.edu.barbacena.ifsudestemg.daw.model.Professor;
+import br.edu.ifsudestemg.barbacena.jdbc.ConnectionFactory;
+import br.edu.ifsudestemg.barbacena.model.Professor;
 
 public class ProfessorDAO {
 

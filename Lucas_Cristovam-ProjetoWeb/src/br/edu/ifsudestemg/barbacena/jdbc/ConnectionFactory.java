@@ -1,4 +1,4 @@
-package br.edu.barbacena.ifsudestemg.daw.jdbc;
+package br.edu.ifsudestemg.barbacena.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

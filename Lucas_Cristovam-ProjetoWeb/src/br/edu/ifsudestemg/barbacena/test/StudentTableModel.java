@@ -1,10 +1,10 @@
-package br.edu.barbacena.ifsudestemg.daw.test;
+package br.edu.ifsudestemg.barbacena.test;
 
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import br.edu.barbacena.ifsudestemg.daw.model.Student;
+import br.edu.ifsudestemg.barbacena.model.Student;
 
 public class StudentTableModel extends AbstractTableModel {
 	private static final String ADDRESS = "Endereco";
