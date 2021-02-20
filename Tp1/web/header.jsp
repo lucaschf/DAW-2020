@@ -13,7 +13,7 @@
 <%--<nav class="navbar navbar-light bg-light">--%>
 <%--    <div class="container">--%>
 <%--        <a class="navbar-brand" href="#">--%>
-<%--            <img src="images/egypt.svg" alt="" class="logo">--%>
+<%--            <img src="images/logo.svg" alt="" class="logo">--%>
 <%--            <b> Agendamento de visitas</b>--%>
 <%--        </a>--%>
 <%--    </div>--%>
@@ -21,7 +21,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <img src="images/egypt.svg" alt="" class="logo">
+        <img src="images/logo.svg" alt="" class="logo">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
