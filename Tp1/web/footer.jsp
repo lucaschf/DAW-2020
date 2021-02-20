@@ -18,7 +18,7 @@
 <footer class="bg-light text-center text-lg-start">
     <!-- Copyright -->
     <div class="text-center p-3">
-        <img src="images/logo.png" alt="" class="logo">
+        <img src="images/logo_.png" alt="" class="logo">
         © 2021 Copyright:
         <a class="text-dark" href="https://github.com/lucaschf/">Lucas Cristovam</a>
     </div>
