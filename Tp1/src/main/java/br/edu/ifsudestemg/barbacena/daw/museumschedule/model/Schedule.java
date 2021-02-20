@@ -1,7 +1,6 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -15,7 +14,7 @@ public class Schedule {
     private LocalTime hours;
     private int visitorsCount;
     private Museum museum;
-    private ArrayList<Visitor> visitors;
+    private ArrayList<Visitor> visitors = new ArrayList<>();
 
     public String getConfirmationCode() {
         return confirmationCode;
