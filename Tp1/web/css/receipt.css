@@ -1,0 +1,107 @@
+* {
+    font-family: 'proxima-nova', sans-serif;
+}
+
+.receipt {
+    width: 95%;
+    max-width: 600px;
+}
+
+.receipt-table {
+    overflow-x: hidden;
+    cellspacing: 0;
+    cellpadding: 0;
+    border: 0;
+    align-content: center;
+    padding-bottom: 40px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.receipt-table td {
+    text-align: center;
+    vertical-align: center;
+}
+
+.receipt-table td h4 {
+    margin-top: 20px;
+    color: #8e24aa;
+    text-align: center;
+}
+
+.receipt-subtitle {
+    font-size: 20px;
+    line-height: 150%;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+    color: #5d666f;
+}
+
+.receipt-img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 192px;
+    height: 192px;
+    background: #fff url('../images/undraw_Online_calendar.svg') no-repeat center;
+    background-size: contain;
+}
+
+.receipt-title {
+    padding: 20px 40px 0px 40px;
+    text-align: center;
+}
+
+.receipt-title h1 {
+    color: #8e24aa;
+    margin: 0;
+    font-size: 22px;
+    line-height: 150%
+}
+
+.receipt-logo {
+    width: 64px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.receipt-td {
+    padding: 15px 40px 0px 40px;
+    font-family: 'proxima-nova', sans-serif;
+    background-color: #ffffff;;
+}
+
+.receipt-td-details-name {
+    padding: 5px;
+    color: #5d666f;
+    margin: 0 30px 0 0;
+    font-size: 16px;
+    line-height: 150%;
+    text-align: left;
+}
+
+.receipt-td-details-info {
+    padding: 5px;
+    color: #5d666f;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 150%;
+    font-weight: bold;
+    text-align: right;
+}
+
+.receipt-code {
+    padding: 10px;
+    max-width: 300px;
+    border-radius: 5px;
+    background-color: #8e24aa;
+    color: #ffffff;
+    margin: 0 auto;
+    font-size: 18px;
+    line-height: 150%;
+    text-align: center
+}
+
+.receipt-td-category {
+    padding: 20px 40px 0px 40px;
+}

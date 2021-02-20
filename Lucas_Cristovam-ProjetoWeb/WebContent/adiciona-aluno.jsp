@@ -9,12 +9,13 @@
 </head>
 <body>
 	<c:import url="cabecalho.jsp" />
-	<form action="adicionaAluno" method="post">
-		<label>Nome: </label> <input type="text" name="nome" /><br /> <label>E-mail:</label><input
-			type="text" name="email" /><br /> <label>Endereço: </label> <input
+	<form action="mvc" method="post">
+		<label>Nome: </label> <input type="text" name="nome" /><br /> <label>E-mail:</label>
+		<input type="text" name="email" /><br /> <label>Endereço: </label> <input
 			type="text" name="endereco" /><br /> <label>Data
 			Nascimento: </label> <input type="text" name="dataNascimento" /> <br /> <input
-			type="submit" value="Gravar" />
+			type="submit" value="Gravar" /> <input type="hidden" name="logica"
+			value="AddStudentLogic">
 	</form>
 	<c:import url="rodape.jsp" />
 </body>

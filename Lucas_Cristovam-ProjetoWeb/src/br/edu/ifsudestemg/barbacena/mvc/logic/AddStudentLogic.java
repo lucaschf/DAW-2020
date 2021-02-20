@@ -1,25 +1,18 @@
-package br.edu.ifsudestemg.barbacena.servlet;
+package br.edu.ifsudestemg.barbacena.mvc.logic;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.edu.ifsudestemg.barbacena.dao.StudentDAO;
 import br.edu.ifsudestemg.barbacena.model.Student;
 
-public class AddStudentServlet extends HttpServlet {
+public class AddStudentLogic implements Logic {
 
-	private static final long serialVersionUID = 1L;
-
-	protected void service(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		var out = response.getWriter();
 
 		String strDate = request.getParameter("dataNascimento");
@@ -37,10 +30,9 @@ public class AddStudentServlet extends HttpServlet {
 			return;
 		}
 
-		StudentDAO dao = new StudentDAO();
-		dao.add(student);
+		new StudentDAO().add(student);
 
-		RequestDispatcher rd = request.getRequestDispatcher("/aluno-adicionado.jsp");
-		rd.forward(request, response);
+		request.getRequestDispatcher("/lista-alunos-elegante.jsp").forward(request, response);
 	}
+
 }

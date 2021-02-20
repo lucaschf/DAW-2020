@@ -9,7 +9,7 @@
 </head>
 <body>
 	<c:import url="cabecalho.jsp" />
-	<form action="adicionaProfessor" method="post">
+	<form action="mvc" method="post">
 		<p>
 			<label>Nome: </label> <input type="text" name="name" />
 		</p>
@@ -25,6 +25,8 @@
 		<p>
 			<input type="submit" value="Gravar" />
 		</p>
+		
+		<input type="hidden" name="logica" value="AdddProfessorLogic">
 	</form>
 	<c:import url="rodape.jsp" />
 </body>

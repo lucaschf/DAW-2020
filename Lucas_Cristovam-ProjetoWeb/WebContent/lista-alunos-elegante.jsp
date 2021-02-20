@@ -11,10 +11,15 @@
 <body>
 	<c:import url="cabecalho.jsp" />
 
+	<p>
+		<a href="adiciona-aluno.jsp"> Adicionar aluno</a>
+	</p>
+
 	<jsp:useBean id="dao"
 		class="br.edu.ifsudestemg.barbacena.dao.StudentDAO" />
 	<table border=1>
 		<tr>
+			<th>Id</th>
 			<th>Nome</th>
 			<th>E-mail</th>
 			<th>Endereço</th>
@@ -22,6 +27,7 @@
 		</tr>
 		<c:forEach var="student" items="${dao.fetchAll()}" varStatus="id">
 			<tr bgcolor="#${id.count %2 == 0 ? 'ae8' : 'fff' }">
+				<td>${student.id}</td>
 				<td>${student.name}</td>
 				<td><c:if test="${not empty student.email}">
 						<a href="mailto:${student.email}">${student.email}</a>

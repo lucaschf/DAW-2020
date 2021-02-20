@@ -1,9 +1,9 @@
-<%@page import="java.time.format.DateTimeFormatter"%>
+<%@page import="br.edu.ifsudestemg.barbacena.model.*"%>
+<%@page import="br.edu.ifsudestemg.barbacena.dao.*"%>
+<%@page import="java.time.format.*"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"
-	import="java.util.*,
-			br.edu.ifsudestemg.barbacena.dao.*,
-			br.edu.ifsudestemg.barbacena.model.*"%>
+	import="java.util.*"%>
 
 <html>
 <body>

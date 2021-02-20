@@ -14,12 +14,16 @@
 		class="br.edu.ifsudestemg.barbacena.dao.ProfessorDAO" />
 	<table border=1>
 		<tr>
+			<th></th>
+			<th>id</th>
 			<th>Nome</th>
 			<th>E-mail</th>
 			<th>Grau instrucao</th>
 		</tr>
 		<c:forEach var="professor" items="${dao.fetchAll()}" varStatus="id">
 			<tr bgcolor="#${id.count %2 == 0 ? 'ae8' : 'fff' }">
+				<td><a href="remove-professor?id=${professor.id}">remover</a></td>
+				<td>${professor.id}</td>
 				<td>${professor.name}</td>
 				<td><c:if test="${not empty professor.email}">
 						<a href="mailto:${professor.email}">${professor.email}</a>
