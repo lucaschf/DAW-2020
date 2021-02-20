@@ -32,6 +32,15 @@ CREATE TABLE schedule(
    	code TEXT PRIMARY KEY
 );
 
+CREATE TABLE visitor(
+	schedule_code TEXT REFERENCES schedule(code) ON DELETE CASCADE,
+	cpf CHARACTER VARYING(11) NOT NULL,
+	name CHARACTER VARYING(100) NOT NULL,
+	ticket_type INTEGER NOT NULL,
+	
+	PRIMARY KEY (schedule_code, cpf)
+);
+
 select ('{'||encode( substring(digest('foobar','sha256') from 1 for 16), 'hex')||'}')::uuid;
       SELECT MD5('GeeksForGeeks MD5');
 
@@ -42,6 +51,8 @@ INSERT INTO public.museum(
 		('Museu da Loucura','09:00', '18:00', 10, 60)
 	;
 	
+	
+
 INSERT INTO public.museum_working_days(
 	museum_id, day_of_week)
 	VALUES 

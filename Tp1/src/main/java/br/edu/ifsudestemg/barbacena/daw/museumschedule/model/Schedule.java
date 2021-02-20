@@ -84,6 +84,6 @@ public class Schedule {
 
     @Override
     public int hashCode() {
-        return Objects.hash(schedulerEmail, date, hours.getHour());
+        return Objects.hash(schedulerEmail, date, hours);
     }
 }

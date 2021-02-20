@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="css/fontawesome.min.css"/>
 </head>
 <body>
 <c:import url="header.jsp"/>
@@ -23,8 +24,10 @@
 <div class="container">
     <c:set var="schedules" value="${scheculeDao.fetchAll()}"/>
     <c:if test="${not empty schedules}">
-        <table class="table">
+        <table class="table align-content-center" style="vertical-align: middle">
             <tr>
+                <th></th>
+                <th></th>
                 <th>Codigo de confirmacao</th>
                 <th>Email do agendador</th>
                 <th>Data</th>
@@ -32,14 +35,28 @@
                 <th>Museu</th>
                 <th>Visitantes</th>
             </tr>
-            <c:forEach var="schecule" items="${schedules}">
+            <c:forEach var="schedule" items="${schedules}">
                 <tr>
-                    <td>${schecule.confirmationCode}</td>
-                    <td>${schecule.schedulerEmail}</td>
-                    <td>${schecule.date.toString()}</td>
-                    <td>${schecule.hours.toString()}</td>
-                    <td>${schecule.museum.name}</td>
-                    <td>${schecule.visitorsCount}</td>
+                    <th>
+                        <form action="scheduler" method="post">
+                            <button class="btn btn-outline-danger" type="submit">Cancelar</button>
+                            <input type="hidden" name="code" value="${schedule.confirmationCode}"/>
+                            <input type="hidden" name="logic" value="CancelScheduleLogic"/>
+                        </form>
+                    </th>
+                    <th>
+                        <form action="scheduler" method="post">
+                            <button class="btn btn-outline-custom" type="submit">Editar</button>
+                            <input type="hidden" name="code" value="${schedule.confirmationCode}"/>
+                            <input type="hidden" name="logic" value="EditScheduleLogic"/>
+                        </form>
+                    </th>
+                    <td>${schedule.confirmationCode}</td>
+                    <td>${schedule.schedulerEmail}</td>
+                    <td>${schedule.date.toString()}</td>
+                    <td>${schedule.hours.toString()}</td>
+                    <td>${schedule.museum.name}</td>
+                    <td>${schedule.visitorsCount}</td>
                 </tr>
             </c:forEach>
         </table>

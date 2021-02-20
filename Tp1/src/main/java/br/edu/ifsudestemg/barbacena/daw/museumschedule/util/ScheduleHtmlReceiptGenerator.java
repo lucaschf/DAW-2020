@@ -29,7 +29,7 @@ public class ScheduleHtmlReceiptGenerator {
         return "<tr><td><table style='overflow-x: hidden;" +
                 "border: 0;" +
                 "align-content: center;" +
-                "padding-bottom: 40px;" +
+                "padding-bottom: 20px;" +
                 "border-radius: 10px;" +
                 "text-align: center;" +
                 "background-color: #fff'>" +
@@ -42,7 +42,7 @@ public class ScheduleHtmlReceiptGenerator {
     }
 
     private String generateMainTable() {
-        return "<table style='margin: 0 auto'>" +
+        return "<table style='margin: 0 auto;' >" +
                 "<tbody>" +
                 generateDataTable(generateHeaderLogo()
                         + generateTitle()
@@ -57,10 +57,18 @@ public class ScheduleHtmlReceiptGenerator {
                 "<table>";
     }
 
-    private static String generateVisitorsInfo(Schedule schedule) {
-        var content = new StringBuilder("<tr>" +
+    private String generateVisitorsInfo(Schedule schedule) {
+        var info = new StringBuilder();
+
+        schedule.getVisitors().forEach(v -> info.append(generateTrScheduleInfo("Nome", v.getName()))
+                .append(generateTrScheduleInfo("Cpf", v.getCpf()))
+                .append(generateTrScheduleInfo("Tipo de ingresso", v.getTicketType().toString()))
+                .append("<tr><td style='padding: 10px'></td></tr>")
+        );
+
+        return "<tr>" +
                 "<td>" +
-                "<p style=' font-size: 20px;" +
+                "<p style='font-size: 20px;" +
                 "line-height: 150%;" +
                 "font-weight: bold;" +
                 "text-align: center;" +
@@ -69,17 +77,25 @@ public class ScheduleHtmlReceiptGenerator {
                 "Visitantes" +
                 "</p>" +
                 "</td>" +
-                "</tr>")
-                .append(generateTrSeparator());
-
-        schedule.getVisitors().forEach(v -> content.append(generateTrScheduleInfo("Nome", v.getName()))
-                .append(generateTrScheduleInfo("Cpf", v.getCpf()))
-                .append(generateTrScheduleInfo("Tipo de ingresso", v.getTicketType().name())));
-
-        return content.toString();
+                "</tr>" +
+                generateTrSeparator() +
+                generateInnerTable(info.toString());
     }
 
-    private static String generateCodeInfo(String confirmationCode) {
+
+    private String generateInnerTable(String tableData) {
+        return "<tr>" +
+                "<td style='padding: 20px 40px 0px 40px;'>" +
+                "<table style='width: 100%'>" +
+                "<tbody>" +
+                tableData +
+                "</tbody>" +
+                "</table>" +
+                "</td>" +
+                "</tr>";
+    }
+
+    private String generateCodeInfo(String confirmationCode) {
         return " <tr>" +
                 "<td style='padding: 20px 40px 0px 40px; text-align: center'>" +
                 "<p>" +
@@ -106,7 +122,7 @@ public class ScheduleHtmlReceiptGenerator {
                 ;
     }
 
-    private static String generateAdditionalInfo() {
+    private String generateAdditionalInfo() {
         return "<tr>" +
                 "<td>" +
                 "<p style='font-size: 20px;" +
@@ -122,7 +138,7 @@ public class ScheduleHtmlReceiptGenerator {
                 "</tr>";
     }
 
-    private static String generateReceiptImage() {
+    private String generateReceiptImage() {
         return "<tr>" +
                 "<td style='padding: 20px 40px 0px 40px;'>" +
                 "<div style='margin-left: auto;" +
@@ -136,7 +152,7 @@ public class ScheduleHtmlReceiptGenerator {
                 "</tr>";
     }
 
-    private static String generateScheduleDateData(LocalDate date) {
+    private String generateScheduleDateData(LocalDate date) {
         return "<tr>" +
                 "<td>" +
                 "<p style='font-size: 18px;" +
@@ -158,7 +174,7 @@ public class ScheduleHtmlReceiptGenerator {
                 "</tr>";
     }
 
-    private static String generateHeaderLogo() {
+    private String generateHeaderLogo() {
         return " <tr>" +
                 "<td align='center'>" +
                 "<img src='https://raw.githubusercontent.com/lucaschf/DAW-2020/main/Tp1/web/images/logo_.png'" +
@@ -167,7 +183,7 @@ public class ScheduleHtmlReceiptGenerator {
                 "</tr>";
     }
 
-    private static String generateTitle() {
+    private String generateTitle() {
         return " <tr>" +
                 "<td style='padding: 20px 40px 0px 40px; text-align: center;'>" +
                 "<h1 style='  color: #8e24aa;" +
@@ -181,12 +197,21 @@ public class ScheduleHtmlReceiptGenerator {
                 "</tr>";
     }
 
-    private static String generateTrSeparator() {
-        return "<tr><td style=' padding: 20px;'><hr/></td></tr>";
+    private String generateTrSeparator() {
+        return "<tr><td style='padding: 20px;'><hr/></td></tr>";
     }
 
-    private static String generateBaseScheduleInfo(Schedule schedule) {
-        return String.format("%s<tr><td style='padding: 20px 40px 0px 40px;'><table><tbody>%s%s%s%s%s</tbody></table></td></tr>",
+    private String generateBaseScheduleInfo(Schedule schedule) {
+        return String.format("%s" +
+                        "<tr>" +
+                        "<td style='padding: 20px 40px 0px 40px;'>" +
+                        "<table>" +
+                        "<tbody>" +
+                        "%s%s%s%s%s" +
+                        "</tbody>" +
+                        "</table>" +
+                        "</td>" +
+                        "</tr>",
                 generateTrSeparator(),
                 generateTrScheduleInfo("Email do agendador", schedule.getSchedulerEmail()),
                 generateTrScheduleInfo("Local da visita", schedule.getMuseum().getName()),
@@ -196,10 +221,11 @@ public class ScheduleHtmlReceiptGenerator {
         );
     }
 
-    private static String generateTrScheduleInfo(String name, String data) {
+    private String generateTrScheduleInfo(String name, String data) {
         return "<tr>" +
+                // name
                 "<td>" +
-                "<p style=' padding: 5px;" +
+                "<p style='padding: 5px;" +
                 "color: #5d666f;" +
                 "margin: 0 30px 0 0;" +
                 "font-size: 16px;" +
@@ -208,10 +234,10 @@ public class ScheduleHtmlReceiptGenerator {
                 name +
                 "</p>" +
                 "</td>" +
-                "<td>" +
+                "<td'>" +
                 "<p style='padding: 5px;" +
                 "color: #5d666f;" +
-                "margin: 0 auto;" +
+                "margin: 0;" +
                 "font-size: 16px;" +
                 "line-height: 150%;" +
                 "font-weight: bold;" +
