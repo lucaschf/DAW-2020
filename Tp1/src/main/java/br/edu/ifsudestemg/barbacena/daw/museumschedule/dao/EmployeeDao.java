@@ -1,5 +1,6 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.dao;
 
+import br.com.caelum.stella.tinytype.CPF;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Employee;
 
 import java.sql.PreparedStatement;
@@ -17,7 +18,7 @@ public class EmployeeDao extends DAO {
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
             statement.setString(1, employee.getName());
-            statement.setString(2, employee.getCpf());
+            statement.setString(2, employee.getCpf().getNumero());
             statement.setLong(3, employee.getMuseum().getId());
 
             statement.execute();
@@ -42,7 +43,7 @@ public class EmployeeDao extends DAO {
                 Employee employee = new Employee();
 
                 employee.setMuseum(museumDao.fetchById(rs.getLong("museum_id")));
-                employee.setCpf(rs.getString("cpf"));
+                employee.setCpf(new CPF(rs.getString("cpf")));
                 employee.setName(rs.getString("name"));
 
                 employees.add(employee);

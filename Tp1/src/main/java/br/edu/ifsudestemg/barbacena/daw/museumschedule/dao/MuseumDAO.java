@@ -1,11 +1,12 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.dao;
 
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Museum;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.MuseumAvailableHours;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.MessageFormat;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public class MuseumDAO extends DAO {
 
     public List<Museum> fetchAll() {
         String tableName = "museum";
-        final String query = "SELECT * FROM " + tableName;
+        final String query = MessageFormat.format("SELECT * FROM {0}", tableName);
 
         List<Museum> museums = new ArrayList<>();
 
@@ -69,6 +70,31 @@ public class MuseumDAO extends DAO {
         }
 
         return null;
+    }
+
+    public List<MuseumAvailableHours> fetchAvailableTimes(Long museumId, LocalDate date) {
+        final String query = " {call visiting_hours(?, ?)}";
+
+        var hours = new ArrayList<MuseumAvailableHours>();
+
+        try (CallableStatement statement = getConnection().prepareCall(query)) {
+            statement.setLong(1, museumId);
+            statement.setDate(2, Date.valueOf(date));
+
+            var rs = statement.executeQuery();
+
+            while (rs.next()) {
+                MuseumAvailableHours hour = new MuseumAvailableHours();
+
+                hour.setHour(rs.getTime("_time").toLocalTime());
+                hour.setVacations(rs.getInt("vacations"));
+                hours.add(hour);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return hours;
     }
 
     private void retrieveMuseumData(Museum museum, ResultSet rs) throws SQLException {

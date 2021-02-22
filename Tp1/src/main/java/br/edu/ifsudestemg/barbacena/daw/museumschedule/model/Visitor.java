@@ -1,25 +1,27 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.model;
 
+import br.com.caelum.stella.tinytype.CPF;
+
 public class Visitor {
 
-    private String scheduleCode;
-    private String cpf;
+    private Long scheduleID;
+    private CPF cpf;
     private String name;
     private TicketType ticketType;
 
-    public String getScheduleCode() {
-        return scheduleCode;
+    public Long getScheduleID() {
+        return scheduleID;
     }
 
-    public void setScheduleCode(String scheduleCode) {
-        this.scheduleCode = scheduleCode;
+    public void setScheduleID(Long scheduleID) {
+        this.scheduleID = scheduleID;
     }
 
-    public String getCpf() {
+    public CPF getCpf() {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
+    public void setCpf(CPF cpf) {
         this.cpf = cpf;
     }
 

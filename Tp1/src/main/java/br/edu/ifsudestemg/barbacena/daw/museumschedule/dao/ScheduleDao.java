@@ -12,23 +12,41 @@ public class ScheduleDao extends DAO {
 
     private final String tableName = "schedule";
 
-    private VisitorsDao visitorsDao = new VisitorsDao();
+    private final VisitorsDao visitorsDao = new VisitorsDao();
 
     public boolean add(Schedule schedule) {
         final String query = String.format("INSERT INTO %s(scheduler_email, schedule_date, schedule_time," +
-                        " visitors, museum_id, code) VALUES( ?, ?, ?, ?, ?, ?)",
+                        " visitors, museum_id, code) VALUES( ?, ?, ?, ?, ?, ?) RETURNING %s.id",
+                tableName,
                 tableName
         );
 
-        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+        System.out.println(query);
+
+        schedule.setConfirmationCode("MSC" + schedule.hashCode());
+
+        try (PreparedStatement statement = getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, schedule.getSchedulerEmail());
             statement.setDate(2, Date.valueOf(schedule.getDate()));
             statement.setTime(3, Time.valueOf(schedule.getHours()));
             statement.setInt(4, schedule.getVisitorsCount());
             statement.setLong(5, schedule.getMuseum().getId());
-            statement.setString(6, String.valueOf(schedule.hashCode()));
+            statement.setString(6, schedule.getConfirmationCode());
 
-            statement.execute();
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating schedule failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    schedule.setId(generatedKeys.getLong(1));
+                } else {
+                    throw new SQLException("Creating schedule failed, no ID obtained.");
+                }
+            }
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,6 +58,19 @@ public class ScheduleDao extends DAO {
     public List<Schedule> fetchAll() {
         final String query = String.format("SELECT * FROM %s", tableName);
 
+        return getSchedules(query);
+    }
+
+    public List<Schedule> fetchByMuseumPerDay(long museumId, LocalDate date) {
+        final String query = String.format("SELECT * FROM %s WHERE museum_id = %d AND schedule_date = '%s'",
+                tableName,
+                museumId,
+                Date.valueOf(date));
+
+        return getSchedules(query);
+    }
+
+    private List<Schedule> getSchedules(String query) {
         List<Schedule> schedules = new ArrayList<>();
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
@@ -58,32 +89,15 @@ public class ScheduleDao extends DAO {
         return schedules;
     }
 
-    public Schedule fetchByCode(String code) {
-        final String query = String.format("SELECT * FROM %s WHERE code LIKE '%s'", tableName, code);
-        Schedule schedule = new Schedule();
-
-        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
-            var rs = statement.executeQuery();
-
-            while (rs.next()) {
-                retrieveScheduleData(schedule, rs);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            schedule = null;
-        }
-
-        return schedule;
-    }
-
     private void retrieveScheduleData(Schedule schedule, ResultSet rs) throws SQLException {
         schedule.setConfirmationCode(rs.getString("code"));
+        schedule.setId(rs.getLong("id"));
         schedule.setSchedulerEmail(rs.getString("scheduler_email"));
         schedule.setDate(LocalDate.parse(rs.getString("schedule_date")));
         schedule.setHours(LocalTime.parse(rs.getString("schedule_time")));
         schedule.setMuseum(new MuseumDAO().fetchById(rs.getLong("museum_id")));
         schedule.setVisitorsCount(rs.getInt("visitors"));
-        schedule.setVisitors(new ArrayList<>(visitorsDao.fetchAllByScheduleCode(schedule.getConfirmationCode())));
+        schedule.addVisitors(visitorsDao.fetchAllByScheduleCode(schedule.getConfirmationCode()));
     }
 
     public boolean remove(Schedule schedule) {

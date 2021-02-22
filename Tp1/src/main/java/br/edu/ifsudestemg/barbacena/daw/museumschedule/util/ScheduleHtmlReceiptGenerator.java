@@ -3,6 +3,7 @@ package br.edu.ifsudestemg.barbacena.daw.museumschedule.util;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ScheduleHtmlReceiptGenerator {
 
@@ -61,7 +62,7 @@ public class ScheduleHtmlReceiptGenerator {
         var info = new StringBuilder();
 
         schedule.getVisitors().forEach(v -> info.append(generateTrScheduleInfo("Nome", v.getName()))
-                .append(generateTrScheduleInfo("Cpf", v.getCpf()))
+                .append(generateTrScheduleInfo("Cpf", v.getCpf().getNumeroFormatado()))
                 .append(generateTrScheduleInfo("Tipo de ingresso", v.getTicketType().toString()))
                 .append("<tr><td style='padding: 10px'></td></tr>")
         );
@@ -167,7 +168,7 @@ public class ScheduleHtmlReceiptGenerator {
                 "margin: 0;" +
                 "font-size: 22px;" +
                 "line-height: 150%'>" +
-                date.toString() +
+                date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
                 "</h1>" +
                 "</p>" +
                 "</td>" +
@@ -215,7 +216,7 @@ public class ScheduleHtmlReceiptGenerator {
                 generateTrSeparator(),
                 generateTrScheduleInfo("Email do agendador", schedule.getSchedulerEmail()),
                 generateTrScheduleInfo("Local da visita", schedule.getMuseum().getName()),
-                generateTrScheduleInfo("Data da visita", schedule.getDate().toString()),
+                generateTrScheduleInfo("Data da visita", schedule.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
                 generateTrScheduleInfo("Horário da visita", schedule.getHours().toString()),
                 generateTrScheduleInfo("Visitantes", String.valueOf(schedule.getVisitorsCount()))
         );

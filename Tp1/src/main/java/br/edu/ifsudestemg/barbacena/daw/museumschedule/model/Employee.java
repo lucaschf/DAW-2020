@@ -1,16 +1,18 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.model;
 
+import br.com.caelum.stella.tinytype.CPF;
+
 public class Employee {
 
-    private String cpf;
+    private CPF cpf;
     private String name;
     private Museum museum;
 
-    public String getCpf() {
+    public CPF getCpf() {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
+    public void setCpf(CPF cpf) {
         this.cpf = cpf;
     }
 

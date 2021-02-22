@@ -1,14 +1,12 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.dao;
 
-import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
+import br.com.caelum.stella.tinytype.CPF;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.TicketType;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Visitor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +16,11 @@ public class VisitorsDao extends DAO {
 
     public boolean add(Visitor visitor) {
         final String query = String.format(
-                "INSERT INTO %s(schedule_code, cpf, name, ticket_type) VALUES (?, ?, ?, ?);", tableName);
+                "INSERT INTO %s(schedule_id, cpf, name, ticket_type) VALUES (?, ?, ?, ?);", tableName);
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
-            statement.setString(1, visitor.getScheduleCode());
-            statement.setString(2, visitor.getCpf());
+            statement.setLong(1, visitor.getScheduleID());
+            statement.setString(2, visitor.getCpf().getNumero());
             statement.setString(3, visitor.getName());
             statement.setInt(4, visitor.getTicketType().getCode());
 
@@ -46,9 +44,9 @@ public class VisitorsDao extends DAO {
             while (rs.next()) {
                 Visitor visitor = new Visitor();
 
-                visitor.setCpf(rs.getString("cpf"));
+                visitor.setCpf(new CPF(rs.getString("cpf")));
                 visitor.setName(rs.getString("name"));
-                visitor.setScheduleCode(rs.getString("schedule_code"));
+                visitor.setScheduleID(rs.getLong("schedule_id"));
                 visitor.setTicketType(TicketType.from(rs.getInt("ticket_type")));
 
                 visitors.add(visitor);
@@ -60,14 +58,18 @@ public class VisitorsDao extends DAO {
     }
 
     public void remove(Visitor visitor) {
-        String sql = String.format("DELETE FROM %s WHERE schedule_code LIKE '%s' AND cpf LIKE '%s';",
+        String sql = String.format("DELETE FROM %s WHERE schedule_id LIKE '%s' AND cpf LIKE '%s';",
                 tableName,
-                visitor.getScheduleCode(),
-                visitor.getCpf());
+                visitor.getScheduleID(),
+                visitor.getCpf().getNumero());
 
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.execute();
         } catch (SQLException ignored) {
         }
+    }
+
+    public void add(ArrayList<Visitor> visitors) {
+        visitors.forEach(this::add);
     }
 }

@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lucas
-  Date: 02/19/2021
-  Time: 09:17
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -15,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
 </head>
 <body>
-<footer class="bg-light text-center text-lg-start">
+<footer class="footer bg-light text-center text-lg-start">
     <!-- Copyright -->
     <div class="text-center p-3">
         <img src="images/logo_.png" alt="" class="logo">

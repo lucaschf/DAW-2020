@@ -1,12 +1,15 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.model;
 
+import br.com.caelum.stella.tinytype.CPF;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Schedule {
-
+    private long id;
     private String confirmationCode;
     private String schedulerEmail;
 
@@ -14,7 +17,15 @@ public class Schedule {
     private LocalTime hours;
     private int visitorsCount;
     private Museum museum;
-    private ArrayList<Visitor> visitors = new ArrayList<>();
+    private final ArrayList<Visitor> visitors = new ArrayList<>();
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getConfirmationCode() {
         return confirmationCode;
@@ -64,12 +75,27 @@ public class Schedule {
         this.visitorsCount = visitorsCount;
     }
 
+    public void addVisitors(@SuppressWarnings("unused") List<Visitor> visitorList) {
+        visitors.forEach(this::addVisitor);
+    }
+
     public ArrayList<Visitor> getVisitors() {
         return visitors;
     }
 
-    public void setVisitors(ArrayList<Visitor> visitors) {
-        this.visitors = visitors;
+    public boolean addVisitor(Visitor visitor) {
+        if (visitorsCount <= visitors.size())
+            return false;
+
+        if (!visitorAlreadyBooked(visitor)) {
+            return visitors.add(visitor);
+        }
+
+        return false;
+    }
+
+    public boolean visitorAlreadyBooked(Visitor visitor) {
+        return visitors.stream().anyMatch(v -> visitor.getCpf().equals(v.getCpf()));
     }
 
     @Override
@@ -85,5 +111,22 @@ public class Schedule {
     @Override
     public int hashCode() {
         return Objects.hash(schedulerEmail, date, hours);
+    }
+
+    @Override
+    public String toString() {
+        return "Schedule{" +
+                "confirmationCode='" + confirmationCode + '\'' +
+                ", schedulerEmail='" + schedulerEmail + '\'' +
+                ", date=" + date +
+                ", hours=" + hours +
+                ", visitorsCount=" + visitorsCount +
+                ", museum=" + museum +
+                ", visitors=" + visitors +
+                '}';
+    }
+
+    public void removeVisitorByCpf(CPF cpf) {
+        visitors.removeIf(v -> v.getCpf().equals(cpf));
     }
 }

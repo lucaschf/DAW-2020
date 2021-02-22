@@ -1,10 +1,16 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.model;
 
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Museum {
+
     private long id;
     private String name;
     private LocalTime opensAt;
@@ -59,6 +65,12 @@ public class Museum {
         return workingDays;
     }
 
+    public String getWorkingDaysDisplayNames(){
+        var result = new ArrayList<String>();
+        workingDays.forEach(wd -> result.add(wd.getDisplayName(TextStyle.SHORT_STANDALONE, new Locale("pt", "BR"))));
+        return String.join(", ",result);
+    }
+
     public void setWorkingDays(List<DayOfWeek> workingDays) {
         this.workingDays = workingDays;
     }
@@ -83,5 +95,11 @@ public class Museum {
                 ", minutesBetweenVisits=" + minutesBetweenVisits +
                 ", workingDays=" + workingDays +
                 '}';
+    }
+
+    public static void main(String[] args) {
+        var m = new MuseumDAO().fetchById(1);
+
+        System.out.println(m.getWorkingDaysDisplayNames());
     }
 }

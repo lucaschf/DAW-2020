@@ -1,9 +1,9 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
+import br.com.caelum.stella.tinytype.CPF;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.EmployeeDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Employee;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Museum;
-import br.edu.ifsudestemg.barbacena.daw.museumschedule.util.MaskUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +15,7 @@ public class AddEmployeeLogic implements Logic {
         var employee = new Employee();
 
         employee.setName(request.getParameter("name"));
-        employee.setCpf(MaskUtil.unmask(request.getParameter("cpf")));
+        employee.setCpf(new CPF(request.getParameter("cpf")));
         employee.setMuseum(new Museum().setId(Long.parseLong(request.getParameter("museum_id"))));
 
         String url = "/employee-list.jsp";

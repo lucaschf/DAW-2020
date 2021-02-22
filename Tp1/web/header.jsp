@@ -52,7 +52,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
                         <li><a class="dropdown-item" href="schedules-list.jsp">Listagem</a></li>
-                        <li><a class="dropdown-item" href="schedule.jsp">Lançamento</a></li>
+                        <li><a class="dropdown-item" href="schedule_museum_select.jsp">Lançamento</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">

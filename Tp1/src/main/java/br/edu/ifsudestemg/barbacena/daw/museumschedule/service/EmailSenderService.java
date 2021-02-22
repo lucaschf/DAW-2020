@@ -61,12 +61,11 @@ public class EmailSenderService {
         }
     }
 
-    public static EmailSendingResult sendEmailMessage(String subject, String recipient, String content) {
+    public static void sendEmailMessage(String subject, String recipient, String content) {
         try {
             var sender = new EmailSenderDAO().fetchAll().get(0);
-            return new EmailSenderService(sender, subject, recipient, content).sendEmail();
-        } catch (Exception e) {
-            return EmailSendingResult.FAILED_BY_UNEXPECTED_ERROR;
+            new EmailSenderService(sender, subject, recipient, content).sendEmail();
+        } catch (Exception ignored) {
         }
     }
 }

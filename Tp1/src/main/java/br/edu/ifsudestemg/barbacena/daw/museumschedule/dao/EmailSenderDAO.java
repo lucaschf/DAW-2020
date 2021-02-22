@@ -12,7 +12,7 @@ public class EmailSenderDAO extends DAO{
 
     public List<EmailAccount> fetchAll() {
         String tableName = "email_sender_credentials";
-        final String query = "SELECT * FROM " + tableName;
+        final String query = String.format("SELECT * FROM %s", tableName);
 
         List<EmailAccount> senders = new ArrayList<>();
 
