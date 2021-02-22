@@ -33,6 +33,7 @@ CREATE TABLE schedule(
 	schedule_time TIME NOT NULL,
 	visitors INTEGER NOT NULL,
 	museum_id BIGINT NOT NULL,
+	termsAcceptanceDate TIMESTAMP NOT NULL,
    	code TEXT NOT NULL UNIQUE
 );
 
@@ -126,6 +127,22 @@ INSERT INTO public.museum(
 		('Museu da Loucura','09:00', '18:00', 10, 60)
 	;
 	
+
+CREATE OR REPLACE FUNCTION update_schedule_visitors_count() RETURNS TRIGGER AS $$
+	DECLARE 
+		visitors_count INTEGER;
+	BEGIN 
+		SELECT COUNT(cpf) FROM visitor WHERE schedule_id = OLD.schedule_id INTO visitors_count;
+		UPDATE schedule SET visitors = visitors_count WHERE schedule.id = OLD.schedule_id; 
+		RETURN NEW;
+	END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_vistors_count AFTER DELETE ON visitor
+	FOR EACH ROW EXECUTE FUNCTION update_schedule_visitors_count();
+
+DELETE FROM visitor Where cpf = '10856446696'
+
 INSERT INTO public.museum_working_days(
 	museum_id, day_of_week)
 	VALUES 

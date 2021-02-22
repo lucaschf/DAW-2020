@@ -102,6 +102,55 @@
                    value="${schedule.visitorsCount}" required>
         </div>
 
+        <h4>Termos e condições</h4>
+        <div class="terms">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris varius condimentum pellentesque. Nam laoreet
+            nulla ex, sed ullamcorper nisi vulputate eu. Integer euismod dolor sapien. Sed dictum condimentum lacus sit
+            amet placerat. Vestibulum sapien est, gravida et rutrum nec, tristique ut est. Nam volutpat ex nec nisl
+            rutrum, sit amet malesuada leo dictum. In hac habitasse platea dictumst.
+
+            Nam eget purus eget sapien commodo vulputate. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+            Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc feugiat nisi tempus, tristique risus
+            sodales, dictum quam. Aenean at varius massa. Cras suscipit ante sed ipsum interdum, ut malesuada erat
+            consequat. Donec mattis ligula in dolor posuere suscipit. Sed at molestie diam, eget lacinia dui. Quisque
+            consequat, tortor in feugiat blandit, arcu eros tincidunt leo, at finibus lorem libero convallis massa.
+            Aliquam felis neque, pretium non semper vel, placerat vel elit. In eget pellentesque arcu. Pellentesque
+            scelerisque porttitor venenatis.
+
+            Fusce sit amet dictum justo. In volutpat, leo at ullamcorper egestas, sapien felis porta nulla, eu sodales
+            purus odio sit amet erat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a vehicula
+            ligula. In id neque ac mauris porttitor fermentum tincidunt quis nibh. Sed eu vulputate libero. Morbi
+            faucibus quis magna sed posuere. Integer commodo augue non magna eleifend consequat. Proin fringilla arcu a
+            mollis luctus. Donec quis lobortis mauris, nec molestie urna.
+
+            Cras turpis libero, hendrerit ut suscipit non, laoreet a leo. Aenean non dapibus metus. Aenean et libero
+            elementum dui consectetur ultricies. Maecenas condimentum risus vel leo imperdiet, hendrerit venenatis ex
+            hendrerit. Pellentesque bibendum turpis sed euismod scelerisque. Nunc ut lectus vitae dolor congue fringilla
+            id et purus. Suspendisse sed metus laoreet, pellentesque purus a, facilisis libero. Mauris sit amet lorem
+            non erat hendrerit viverra. Maecenas eget lacinia nisl. Suspendisse quis enim rhoncus, tincidunt magna et,
+            ornare ex. Mauris a nibh dignissim, laoreet nulla non, tristique augue.
+
+            Aenean volutpat tristique velit, at interdum erat gravida sit amet. In quam lorem, hendrerit at massa ac,
+            commodo vulputate enim. Morbi pretium justo metus. Quisque dictum, nulla nec tristique tincidunt, mi nunc
+            semper purus, quis tempus diam orci sit amet ante. Morbi at ex consequat, feugiat felis vitae, aliquet
+            tellus. Nulla ultricies, ipsum ut pulvinar blandit, justo tellus sodales orci, non scelerisque dui enim a
+            metus. Vestibulum dignissim, metus eu luctus finibus, mi libero convallis odio, eu pulvinar risus massa in
+            elit. Integer euismod purus a nulla faucibus dapibus. Ut facilisis luctus viverra. Cras convallis ornare
+            nulla, eget accumsan ante. Duis vitae augue sit amet lorem tempor placerat. Duis fermentum risus vel neque
+            convallis vulputate.
+        </div>
+
+        <div class="col-md-3">
+            <label for="inputAcceptTerms" class="form-label">Aceito os termos e condicoes </label>
+            <c:if test="${schedule.termsAcceptanceDate == null}">
+                <input class="form-check-input" type="checkbox" name="termsAccepted" id="inputAcceptTerms" required/>
+            </c:if>
+            <c:if test="${schedule.termsAcceptanceDate != null}">
+                <input class="form-check-input" type="checkbox" name="termsAccepted" checked id="inputAcceptTerms" required/>
+            </c:if>
+
+        </div>
+
         <div class="col-12 pb-3">
             <button class="btn btn-outline-custom" type="submit">Agendar</button>
         </div>

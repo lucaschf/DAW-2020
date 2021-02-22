@@ -22,7 +22,7 @@
 </div>
 
 <div class="container">
-    <form class="row g-2" action="scheduler" method="post">
+    <form class="row g-3" action="scheduler" method="post">
         <input type="hidden" name="logic" value="AddEmployeeLogic"/>
 
         <div class="col-md-3">
@@ -52,7 +52,7 @@
 
     <c:set var="employees" value="${employeDao.fetchAll()}"/>
     <c:if test="${not empty employees}">
-        <table class="table">
+        <table class="table table-striped">
             <tr>
                 <th>Cpf</th>
                 <th>Nome</th>

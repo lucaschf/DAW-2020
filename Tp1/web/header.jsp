@@ -32,9 +32,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="index.jsp">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
@@ -51,12 +48,17 @@
                         Agendamentos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-                        <li><a class="dropdown-item" href="schedules-list.jsp">Listagem</a></li>
-                        <li><a class="dropdown-item" href="schedule_museum_select.jsp">Lançamento</a></li>
+                        <li><a class="dropdown-item" href="schedules-list.jsp">Consultar</a></li>
+                        <li><a class="dropdown-item" href="schedule_museum_select.jsp">Novo Agendamento</a></li>
+                        <li><a class="dropdown-item" href="schedule_cancel_form.jsp">Cancelar</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    <a class="nav-link active" aria-current="page" href="login.jsp">Login</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="logout.jsp">Logout</a>
                 </li>
             </ul>
         </div>

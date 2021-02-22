@@ -94,5 +94,10 @@
 .logo {
     width: 48px !important;
     height: 36px !important;
+    margin-right: 10px;
 }
 
+.terms {
+    max-height: 250px !important;
+    overflow-y: scroll !important;
+}

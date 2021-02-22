@@ -7,4 +7,6 @@ public interface Constants {
     String THE_MUSEUM_IS_CLOSED_AT_INFORMED_TIME = "O museu encontra-se fechado no dia e horário informados.";
     String INVALID_CPF = "Cpf Inválido.";
     String FAIL_TO_ADD_VISITOR = "Falha ao adicionar visitante";
+    String YOU_MUST_ACCEPT_THE_TERMS = "Você deve aceitar os termos";
+    String NO_SCHEDULE_FOUND = "Agendamento não encontrado";
 }

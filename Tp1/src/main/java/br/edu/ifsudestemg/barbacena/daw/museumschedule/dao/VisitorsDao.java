@@ -33,8 +33,8 @@ public class VisitorsDao extends DAO {
         return false;
     }
 
-    public List<Visitor> fetchAllByScheduleCode(String code) {
-        final String query = String.format("SELECT * FROM %s WHERE schedule_code LIKE '%s'", tableName, code);
+    public List<Visitor> fetchAllBySchedule(long code) {
+        final String query = String.format("SELECT * FROM %s WHERE schedule_id = %d", tableName, code);
 
         List<Visitor> visitors = new ArrayList<>();
 
@@ -54,6 +54,7 @@ public class VisitorsDao extends DAO {
         } catch (SQLException ignored) {
         }
 
+        System.out.println(visitors);
         return visitors;
     }
 

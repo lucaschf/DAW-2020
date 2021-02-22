@@ -3,6 +3,7 @@ package br.edu.ifsudestemg.barbacena.daw.museumschedule.model;
 import br.com.caelum.stella.tinytype.CPF;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Schedule {
     private LocalTime hours;
     private int visitorsCount;
     private Museum museum;
+    private LocalDateTime termsAcceptanceDate = null;
     private final ArrayList<Visitor> visitors = new ArrayList<>();
 
     public long getId() {
@@ -75,7 +77,15 @@ public class Schedule {
         this.visitorsCount = visitorsCount;
     }
 
-    public void addVisitors(@SuppressWarnings("unused") List<Visitor> visitorList) {
+    public LocalDateTime getTermsAcceptanceDate() {
+        return termsAcceptanceDate;
+    }
+
+    public void setTermsAcceptanceDate(LocalDateTime termsAcceptanceDate) {
+        this.termsAcceptanceDate = termsAcceptanceDate;
+    }
+
+    public void addVisitors(@SuppressWarnings("unused") List<Visitor> visitors) {
         visitors.forEach(this::addVisitor);
     }
 

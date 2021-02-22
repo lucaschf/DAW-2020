@@ -16,7 +16,7 @@ public class ScheduleDao extends DAO {
 
     public boolean add(Schedule schedule) {
         final String query = String.format("INSERT INTO %s(scheduler_email, schedule_date, schedule_time," +
-                        " visitors, museum_id, code) VALUES( ?, ?, ?, ?, ?, ?) RETURNING %s.id",
+                        " visitors, museum_id, code, termsAcceptanceDate) VALUES( ?, ?, ?, ?, ?, ?, ?) RETURNING %s.id",
                 tableName,
                 tableName
         );
@@ -32,6 +32,7 @@ public class ScheduleDao extends DAO {
             statement.setInt(4, schedule.getVisitorsCount());
             statement.setLong(5, schedule.getMuseum().getId());
             statement.setString(6, schedule.getConfirmationCode());
+            statement.setTimestamp(7, Timestamp.valueOf(schedule.getTermsAcceptanceDate()));
 
             int affectedRows = statement.executeUpdate();
 
@@ -70,6 +71,25 @@ public class ScheduleDao extends DAO {
         return getSchedules(query);
     }
 
+    public Schedule fetchByEmailAndCode(String email, String confirmationCode) {
+        final String query = String.format("SELECT * FROM %s WHERE scheduler_email = '%s' AND code = '%s'",
+                tableName,
+                email,
+                confirmationCode);
+
+        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                Schedule schedule = new Schedule();
+                retrieveScheduleData(schedule, rs);
+                return schedule;
+            }
+        } catch (Exception ignored) {
+        }
+
+        return null;
+    }
+
     private List<Schedule> getSchedules(String query) {
         List<Schedule> schedules = new ArrayList<>();
 
@@ -96,8 +116,9 @@ public class ScheduleDao extends DAO {
         schedule.setDate(LocalDate.parse(rs.getString("schedule_date")));
         schedule.setHours(LocalTime.parse(rs.getString("schedule_time")));
         schedule.setMuseum(new MuseumDAO().fetchById(rs.getLong("museum_id")));
+        schedule.setTermsAcceptanceDate(rs.getTimestamp("termsAcceptanceDate").toLocalDateTime());
         schedule.setVisitorsCount(rs.getInt("visitors"));
-        schedule.addVisitors(visitorsDao.fetchAllByScheduleCode(schedule.getConfirmationCode()));
+        schedule.addVisitors(visitorsDao.fetchAllBySchedule(schedule.getId()));
     }
 
     public boolean remove(Schedule schedule) {

@@ -16,14 +16,14 @@
 <jsp:useBean id="employeDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.EmployeeDao"/>
 
 <div class="container pt-3">
-    <h2>Empregados</h2>
+    <h2>Funcionários</h2>
     <hr class="mb-5"/>
 </div>
 
 <div class="container">
     <c:set var="employees" value="${employeDao.fetchAll()}"/>
     <c:if test="${not empty employees}">
-        <table class="table">
+        <table class="table table-striped">
             <tr>
                 <th>Cpf</th>
                 <th>Nome</th>

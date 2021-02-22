@@ -1,6 +1,7 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.BookedTime;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.ErrorMessage;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.util.FormatterUtils;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.*;
 
@@ -30,6 +32,8 @@ public class SelectMuseumLogic implements Logic {
         schedule.setMuseum(museum);
         schedule.setHours(LocalTime.parse(request.getParameter("time")));
         schedule.setVisitorsCount(Integer.parseInt(request.getParameter("visitors")));
+        var termsAccepted = request.getParameter("termsAccepted").equalsIgnoreCase("on");
+        schedule.setTermsAcceptanceDate(termsAccepted ? LocalDateTime.now() : null);
 
         request.getRequestDispatcher(processData(schedule, request))
                 .forward(request, response);
@@ -68,6 +72,16 @@ public class SelectMuseumLogic implements Logic {
                     new ErrorMessage("", THERE_ARE_NOT_ENOUGH_PLACES_FOR_THIS_SCHEDULE));
 
             return sourcePage;
+        }
+
+        if(schedule.getTermsAcceptanceDate() == null)
+        {
+            request.setAttribute(
+                    "errorMessage",
+                    new ErrorMessage("", YOU_MUST_ACCEPT_THE_TERMS));
+
+            return sourcePage;
+
         }
 
         return url;

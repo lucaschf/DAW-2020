@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Employee registration</title>
+    <title>Agendamentos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
@@ -24,14 +24,15 @@
 <div class="container">
     <c:set var="schedules" value="${scheculeDao.fetchAll()}"/>
     <c:if test="${not empty schedules}">
-        <table class="table align-content-center" style="vertical-align: middle">
+        <table class="table align-content-center table-striped" style="vertical-align: middle">
             <tr>
                 <th></th>
                 <th></th>
                 <th>Codigo de confirmacao</th>
                 <th>Email do agendador</th>
-                <th>Data</th>
-                <th>Hora</th>
+                <th>Data da visita</th>
+                <th>Horário da visita</th>
+                <th>Data de aceite aos termos</th>
                 <th>Museu</th>
                 <th>Visitantes</th>
             </tr>
@@ -55,6 +56,7 @@
                     <td>${schedule.schedulerEmail}</td>
                     <td>${schedule.date.toString()}</td>
                     <td>${schedule.hours.toString()}</td>
+                    <td>${schedule.termsAcceptanceDate.toString()}</td>
                     <td>${schedule.museum.name}</td>
                     <td>${schedule.visitorsCount}</td>
                 </tr>
