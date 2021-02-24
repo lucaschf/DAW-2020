@@ -132,20 +132,22 @@ public class ScheduleHtmlReceiptGenerator {
     }
 
     private String generateReceiptImage() {
+        var background = String.format("background: #fff url(\"%s\") no-repeat center;", getImageUrl());
+
         return "<tr>" +
                 "<td style='padding: 20px 40px 0px 40px;'>" +
                 "<div style='margin-left: auto;" +
                 "margin-right: auto;" +
                 "width: 192px;" +
                 "height: 192px;" +
-                "background: #fff url('" + getImageUrl() + "') no-repeat center;" +
+                background +
                 "background-size: contain;'>" +
                 "</div>" +
                 "</td>" +
                 "</tr>";
     }
 
-    private String getImageUrl(){
+    private String getImageUrl() {
         final String baseImageUrl = "https://raw.githubusercontent.com/lucaschf/DAW-2020/main/Tp1/web/images/";
 
         if (type == ReceiptType.CREATION)
