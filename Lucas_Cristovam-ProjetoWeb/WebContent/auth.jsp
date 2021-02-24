@@ -8,13 +8,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<img src="images/logo.png">
-	<h2>Sistema de Gestão Acadêmica do Lucas Cristovam</h2>
-	<hr />
-	<c:if test="${sessionScope.status == true}">
-		Olá ${sessionScope.name }, seja bem-vindo! <br />
-		
-		Clique <a href="mvc?logica=Logout">aqui</a> para sair<br />
+	<c:if test="${sessionScope.status != true}">
+		<jsp:forward page="login.jsp" />
 	</c:if>
 </body>
 </html>

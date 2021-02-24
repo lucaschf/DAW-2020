@@ -168,3 +168,15 @@ INSERT INTO public.museum_working_days(
 		(2, 6),
 		(2, 7);
 		
+		
+SELECT 
+		schedule.id AS schedule_id,
+		schedule.schedule_date,
+		schedule.schedule_time,
+		cpf, 
+		name
+		FROM schedule 
+		INNER JOIN visitor ON visitor.schedule_id = schedule.id 
+		WHERE schedule.schedule_date = '2021-02-25' AND schedule.museum_id = 1
+	;
+

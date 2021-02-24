@@ -2,8 +2,8 @@
 <%@page import="br.edu.ifsudestemg.barbacena.dao.*"%>
 <%@page import="java.time.format.*"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"
-	import="java.util.*"%>
+	pageEncoding="ISO-8859-1" import="java.util.*"%>
+<%@include file="auth.jsp"%>
 
 <html>
 <body>
@@ -18,7 +18,7 @@
 		<%
 		StudentDAO dao = new StudentDAO();
 		List<Student> students = dao.fetchAll();
-		for (Student student :students) {
+		for (Student student : students) {
 		%>
 		<tr>
 			<td><%=student.getName()%></td>

@@ -20,13 +20,8 @@
 </div>
 
 <div class="container">
-    <c:set var="message" value="${requestScope.message}"/>
 
-    <c:if test="${not empty message}">
-        <div class="alert alert-${message.type.toString().toLowerCase()}" role="alert">
-                ${message.message}
-        </div>
-    </c:if>
+    <%@include file="message.jsp" %>
 
     <form class="row g-3" action="scheduler" method="post">
         <input type="hidden" name="logic" value="SearchScheduleForEditLogic"/>

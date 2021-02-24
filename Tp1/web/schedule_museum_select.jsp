@@ -17,7 +17,7 @@
 <jsp:useBean id="museumDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO"/>
 <jsp:useBean id="localDateBean" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.model.LocalDateBean"/>
 <c:set var="museums" value="${museumDao.fetchAll()}"/>
-<c:set var="message" value="${requestScope.message}"/>
+<%--<c:set var="message" value="${requestScope.message}"/>--%>
 <c:set var="schedule" value="${requestScope.schedule}"/>
 
 <div class="container pt-3">
@@ -47,11 +47,7 @@
     <h4 class="mt-5 mb-3">Dados para agendamento</h4>
     <hr class="mb-5"/>
 
-    <c:if test="${not empty message}">
-        <div class="alert alert-${message.type.toString().toLowerCase()}" role="alert">
-                ${message.message}
-        </div>
-    </c:if>
+    <%@include file="message.jsp" %>
 
     <form class="row g-3" action="scheduler" method="post">
         <input type="hidden" name="logic" value="SelectMuseumLogic"/>

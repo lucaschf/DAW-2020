@@ -15,7 +15,6 @@
 
 <jsp:useBean id="formatterUtils" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.util.FormatterUtils"/>
 <c:set var="schedule" value="${requestScope.schedule}" scope="session"/>
-<c:set var="message" value="${requestScope.message}"/>
 
 <c:import url="header.jsp"/>
 
@@ -62,11 +61,7 @@
             </div>
         </c:if>
 
-        <c:if test="${not empty message}">
-            <div class="alert alert-${message.type.toString().toLowerCase()}" role="alert">
-                    ${message.message}
-            </div>
-        </c:if>
+        <%@include file="message.jsp" %>
 
         <c:set var="visitors" value="${schedule.visitors}"/>
         <c:if test="${not empty visitors}">

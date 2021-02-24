@@ -10,15 +10,6 @@
 </head>
 <body>
 
-<%--<nav class="navbar navbar-light bg-light">--%>
-<%--    <div class="container">--%>
-<%--        <a class="navbar-brand" href="#">--%>
-<%--            <img src="images/logo.svg" alt="" class="logo">--%>
-<%--            <b> Agendamento de visitas</b>--%>
-<%--        </a>--%>
-<%--    </div>--%>
-<%--</nav>--%>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <img src="images/logo_.png" alt="" class="logo">
@@ -58,7 +49,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="logout.jsp">Logout</a>
+                    <a class="nav-link active" aria-current="page" href="scheduler?logic=Logout">Logout</a>
                 </li>
             </ul>
         </div>

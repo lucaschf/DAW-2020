@@ -18,7 +18,7 @@ public class ControllerServlet extends HttpServlet {
 			throws ServletException, IOException {
 		String param = request.getParameter("logica");
 		String className = "br.edu.ifsudestemg.barbacena.mvc.logic." + param;
-
+		
 		try {
 			Class<?> targetClass = Class.forName(className);
 			Logic logic = (Logic) targetClass.getConstructor().newInstance();

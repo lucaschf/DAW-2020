@@ -4,6 +4,7 @@
 	import="java.util.*,
 			br.edu.ifsudestemg.barbacena.dao.*,
 			br.edu.ifsudestemg.barbacena.model.*"%>
+<%@include file="auth.jsp"%>
 
 <html>
 <body>
