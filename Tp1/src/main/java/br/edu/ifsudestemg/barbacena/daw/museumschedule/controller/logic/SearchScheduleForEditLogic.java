@@ -1,18 +1,19 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.ScheduleDao;
-import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.ErrorMessage;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.NO_SCHEDULE_FOUND;
 
-public class SearchScheduleForCancelLogic implements Logic {
+public class SearchScheduleForEditLogic implements Logic {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String sourcePage = "/schedule_cancel_form.jsp";
+        String sourcePage = "/search_schedule.jsp";
         String nextPage = "/schedule_cancel.jsp";
 
         var email = request.getParameter("email");
@@ -23,11 +24,17 @@ public class SearchScheduleForCancelLogic implements Logic {
         if (schedule == null) {
             request.setAttribute("email", email);
             request.setAttribute("confirmationCode", confirmationCode);
-            request.setAttribute("errorMessage", new ErrorMessage(NO_SCHEDULE_FOUND));
+            request.setAttribute(MESSAGE_PARAM, new Message(NO_SCHEDULE_FOUND));
             request.getRequestDispatcher(sourcePage).forward(request, response);
+
+            return;
         }
 
-        System.out.println(schedule);
+        var scheduleDateTime = schedule.getDate().atTime(schedule.getHours());
+
+        if (LocalDateTime.now().isAfter(scheduleDateTime)) {
+            request.setAttribute(MESSAGE_PARAM, new Message(NO_SCHEDULE_FOUND));
+        }
 
         request.setAttribute("schedule", schedule);
         request.getRequestDispatcher(nextPage).forward(request, response);

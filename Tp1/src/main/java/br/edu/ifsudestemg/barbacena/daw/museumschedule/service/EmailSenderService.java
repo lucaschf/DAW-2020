@@ -26,7 +26,10 @@ public class EmailSenderService {
         this.content = content;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     protected EmailSendingResult sendEmail() {
+        EmailSendingResult result;
+
         try {
             // create message
             MimeMessage mimeMessage = new MimeMessage(emailAccount.getSession());
@@ -51,21 +54,25 @@ public class EmailSenderService {
 
             transport.sendMessage(mimeMessage, mimeMessage.getAllRecipients());
             transport.close();
-            return EmailSendingResult.SUCCESS;
+            result = EmailSendingResult.SUCCESS;
         } catch (MessagingException e) {
             e.printStackTrace();
-            return EmailSendingResult.FAILED_BY_PROVIDER;
+            result = EmailSendingResult.FAILED_BY_PROVIDER;
         } catch (Exception e) {
             e.printStackTrace();
-            return EmailSendingResult.FAILED_BY_UNEXPECTED_ERROR;
+            result = EmailSendingResult.FAILED_BY_UNEXPECTED_ERROR;
         }
+
+        return result;
     }
 
     public static void sendEmailMessage(String subject, String recipient, String content) {
-        try {
-            var sender = new EmailSenderDAO().fetchAll().get(0);
-            new EmailSenderService(sender, subject, recipient, content).sendEmail();
-        } catch (Exception ignored) {
-        }
+        new Thread(() -> {
+            try {
+                var sender = new EmailSenderDAO().fetchAll().get(0);
+                new EmailSenderService(sender, subject, recipient, content).sendEmail();
+            } catch (Exception ignored) {
+            }
+        }).start();
     }
 }

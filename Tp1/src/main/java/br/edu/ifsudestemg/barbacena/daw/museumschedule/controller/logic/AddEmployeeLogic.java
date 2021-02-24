@@ -22,7 +22,7 @@ public class AddEmployeeLogic implements Logic {
 
         if (!new EmployeeDao().add(employee)) {
             url = "/server-error.jsp";
-            request.setAttribute("message", "Não foi possível adicionar o funcionario. Verifique os dados e tente novamente.");
+            request.setAttribute(MESSAGE_PARAM, "Não foi possível adicionar o funcionario. Verifique os dados e tente novamente.");
             request.setAttribute("source_page", "employee-registration.jsp");
         }
 

@@ -38,13 +38,21 @@ CREATE TABLE schedule(
 );
 
 CREATE TABLE visitor(
-	schedule_id BIGINT REFERENCES schedule(id) ON DELETE CASCADE,
+	schedule_id BIGINT REFERENCES schedule(id) ,
 	cpf CHARACTER VARYING(11) NOT NULL,
 	name CHARACTER VARYING(100) NOT NULL,
 	ticket_type INTEGER NOT NULL,
 	
 	PRIMARY KEY (schedule_id, cpf)
 );
+
+ALTER TABLE visitor ADD COLUMN attended BOOLEAN NOT NULL DEFAULT FALSE;
+
+--CREATE TABLE visited_museum_at_day(
+--	visit_date DATE REFERENCES schedule(schedule_date),
+--	visit_time TIME NOT NULL,
+--	cpf CHARACTER VARYING(11) NOT NULL,
+--)
 
 CREATE OR REPLACE FUNCTION booked_visitors(museumId BIGINT, _date DATE) RETURNS TABLE(
 	visitors INT,

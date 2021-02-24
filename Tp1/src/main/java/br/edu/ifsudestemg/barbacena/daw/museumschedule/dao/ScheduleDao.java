@@ -21,8 +21,6 @@ public class ScheduleDao extends DAO {
                 tableName
         );
 
-        System.out.println(query);
-
         schedule.setConfirmationCode("MSC" + schedule.hashCode());
 
         try (PreparedStatement statement = getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -59,7 +57,7 @@ public class ScheduleDao extends DAO {
     public List<Schedule> fetchAll() {
         final String query = String.format("SELECT * FROM %s", tableName);
 
-        return getSchedules(query);
+        return fetchSchedules(query);
     }
 
     public List<Schedule> fetchByMuseumPerDay(long museumId, LocalDate date) {
@@ -68,7 +66,7 @@ public class ScheduleDao extends DAO {
                 museumId,
                 Date.valueOf(date));
 
-        return getSchedules(query);
+        return fetchSchedules(query);
     }
 
     public Schedule fetchByEmailAndCode(String email, String confirmationCode) {
@@ -77,11 +75,23 @@ public class ScheduleDao extends DAO {
                 email,
                 confirmationCode);
 
+        return fetchSchedule(query);
+    }
+
+    public Schedule fetchById(long id) {
+        final String query = String.format("SELECT * FROM %s WHERE id = %d",
+                tableName,
+                id);
+
+        return fetchSchedule(query);
+    }
+
+    private Schedule fetchSchedule(String query) {
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 Schedule schedule = new Schedule();
-                retrieveScheduleData(schedule, rs);
+                getSchedule(schedule, rs);
                 return schedule;
             }
         } catch (Exception ignored) {
@@ -90,7 +100,7 @@ public class ScheduleDao extends DAO {
         return null;
     }
 
-    private List<Schedule> getSchedules(String query) {
+    private List<Schedule> fetchSchedules(String query) {
         List<Schedule> schedules = new ArrayList<>();
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
@@ -99,7 +109,7 @@ public class ScheduleDao extends DAO {
             while (rs.next()) {
                 Schedule schedule = new Schedule();
 
-                retrieveScheduleData(schedule, rs);
+                getSchedule(schedule, rs);
 
                 schedules.add(schedule);
             }
@@ -109,7 +119,7 @@ public class ScheduleDao extends DAO {
         return schedules;
     }
 
-    private void retrieveScheduleData(Schedule schedule, ResultSet rs) throws SQLException {
+    private void getSchedule(Schedule schedule, ResultSet rs) throws SQLException {
         schedule.setConfirmationCode(rs.getString("code"));
         schedule.setId(rs.getLong("id"));
         schedule.setSchedulerEmail(rs.getString("scheduler_email"));
@@ -122,12 +132,11 @@ public class ScheduleDao extends DAO {
     }
 
     public boolean remove(Schedule schedule) {
-        final String query = String.format("DELETE FROM %s WHERE code=?", tableName);
+        final String query = String.format("DELETE FROM %s WHERE id=?", tableName);
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
-            statement.setString(1, schedule.getConfirmationCode());
-            statement.execute();
-            return true;
+            statement.setLong(1, schedule.getId());
+            return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

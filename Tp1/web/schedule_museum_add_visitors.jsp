@@ -15,7 +15,7 @@
 
 <c:set var="schedule" value="${requestScope.schedule}" scope="session"/>
 <jsp:useBean id="ticketBean" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.model.TicketTypeBean"/>
-<c:set var="errorMessage" value="${requestScope.errorMessage}"/>
+<c:set var="message" value="${requestScope.message}"/>
 
 <c:import url="header.jsp"/>
 
@@ -54,9 +54,9 @@
         </div>
 
         <c:if test="${schedule.visitorsCount > schedule.visitors.size()}">
-            <c:if test="${not empty errorMessage}">
-                <div class="alert alert-danger" role="alert">
-                        ${errorMessage.message}
+            <c:if test="${not empty message}">
+                <div class="alert alert-${message.type.toString().toLowerCase()}" role="alert">
+                        ${message.message}
                 </div>
             </c:if>
 

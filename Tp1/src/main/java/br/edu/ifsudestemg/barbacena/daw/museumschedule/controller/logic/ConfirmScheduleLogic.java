@@ -2,7 +2,7 @@ package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.ScheduleDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.VisitorsDao;
-import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.ErrorMessage;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.service.EmailSenderService;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.util.ScheduleHtmlReceiptGenerator;
@@ -22,7 +22,7 @@ public class ConfirmScheduleLogic implements Logic {
         request.getSession().removeAttribute(scheduleAttr);
 
         if (!new ScheduleDao().add(schedule)) {
-            request.setAttribute("errorMessage", new ErrorMessage("", "Falha ao realizar agendamento"));
+            request.setAttribute(MESSAGE_PARAM, new Message("", "Falha ao realizar agendamento"));
             request.setAttribute(scheduleAttr, schedule);
             request.getRequestDispatcher(sourcePage).forward(request, response);
         }
@@ -31,7 +31,7 @@ public class ConfirmScheduleLogic implements Logic {
         new VisitorsDao().add(schedule.getVisitors());
         EmailSenderService.sendEmailMessage("Confirmação de agendamento",
                 schedule.getSchedulerEmail(),
-                new ScheduleHtmlReceiptGenerator(schedule).generateReceipt());
+                new ScheduleHtmlReceiptGenerator(schedule, ScheduleHtmlReceiptGenerator.ReceiptType.CREATION).generateReceipt());
 
         request.getRequestDispatcher(url).forward(request, response);
     }

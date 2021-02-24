@@ -50,7 +50,7 @@
                     <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
                         <li><a class="dropdown-item" href="schedules-list.jsp">Consultar</a></li>
                         <li><a class="dropdown-item" href="schedule_museum_select.jsp">Novo Agendamento</a></li>
-                        <li><a class="dropdown-item" href="schedule_cancel_form.jsp">Cancelar</a></li>
+                        <li><a class="dropdown-item" href="search_schedule.jsp">Editar</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">

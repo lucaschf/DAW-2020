@@ -22,7 +22,7 @@
 
                         <p>Someone took this page away!</p>
 
-                        <a href="schedulling/index.jsp " class="btn btn-outline-custom">Home</a>
+                        <a href="/index.jsp " class="btn btn-outline-custom">Home</a>
                     </div>
                 </div>
             </div>

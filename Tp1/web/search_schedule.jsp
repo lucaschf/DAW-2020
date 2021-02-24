@@ -20,16 +20,16 @@
 </div>
 
 <div class="container">
-    <c:set var="errorMessage" value="${requestScope.errorMessage}"/>
+    <c:set var="message" value="${requestScope.message}"/>
 
-    <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger" role="alert">
-                ${errorMessage.message}
+    <c:if test="${not empty message}">
+        <div class="alert alert-${message.type.toString().toLowerCase()}" role="alert">
+                ${message.message}
         </div>
     </c:if>
 
     <form class="row g-3" action="scheduler" method="post">
-        <input type="hidden" name="logic" value="SearchScheduleForCancelLogic"/>
+        <input type="hidden" name="logic" value="SearchScheduleForEditLogic"/>
 
         <div class="col-md-3">
             <label for="inputConfirmationCode" class="form-label">Código de confirmação</label>

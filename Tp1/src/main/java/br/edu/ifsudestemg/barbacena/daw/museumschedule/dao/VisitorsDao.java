@@ -54,20 +54,21 @@ public class VisitorsDao extends DAO {
         } catch (SQLException ignored) {
         }
 
-        System.out.println(visitors);
         return visitors;
     }
 
-    public void remove(Visitor visitor) {
-        String sql = String.format("DELETE FROM %s WHERE schedule_id LIKE '%s' AND cpf LIKE '%s';",
+    public boolean remove(Visitor visitor) {
+        String sql = String.format("DELETE FROM %s WHERE schedule_id = %d AND cpf LIKE '%s';",
                 tableName,
                 visitor.getScheduleID(),
                 visitor.getCpf().getNumero());
 
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-            stmt.execute();
+            return stmt.executeUpdate() > 0;
         } catch (SQLException ignored) {
         }
+
+        return false;
     }
 
     public void add(ArrayList<Visitor> visitors) {

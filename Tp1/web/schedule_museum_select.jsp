@@ -15,9 +15,9 @@
 
 <c:import url="header.jsp"/>
 <jsp:useBean id="museumDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO"/>
-<jsp:useBean id="formatterUtils" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.util.FormatterUtils"/>
+<jsp:useBean id="localDateBean" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.model.LocalDateBean"/>
 <c:set var="museums" value="${museumDao.fetchAll()}"/>
-<c:set var="errorMessage" value="${requestScope.errorMessage}"/>
+<c:set var="message" value="${requestScope.message}"/>
 <c:set var="schedule" value="${requestScope.schedule}"/>
 
 <div class="container pt-3">
@@ -47,9 +47,9 @@
     <h4 class="mt-5 mb-3">Dados para agendamento</h4>
     <hr class="mb-5"/>
 
-    <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger" role="alert">
-                ${errorMessage.message}
+    <c:if test="${not empty message}">
+        <div class="alert alert-${message.type.toString().toLowerCase()}" role="alert">
+                ${message.message}
         </div>
     </c:if>
 
@@ -87,13 +87,13 @@
 
         <div class="col-md-3">
             <label for="inputDate" class="form-label">Data</label>
-            <input type="text" name="date" class="form-control" id="inputDate"
-                   value="${schedule.date.format(formatterUtils.brazilianDateFormatter)}" required>
+            <input type="date" name="date" class="form-control" id="inputDate"
+                   value="${schedule.date}" min="${localDateBean.now}" required>
         </div>
 
         <div class="col-md-3">
             <label for="inputTime" class="form-label">Horário</label>
-            <input type="text" name="time" class="form-control" id="inputTime" value="${schedule.hours}" required>
+            <input type="time" name="time" class="form-control" id="inputTime" value="${schedule.hours}" required>
         </div>
 
         <div class="col-md-3">
@@ -146,7 +146,8 @@
                 <input class="form-check-input" type="checkbox" name="termsAccepted" id="inputAcceptTerms" required/>
             </c:if>
             <c:if test="${schedule.termsAcceptanceDate != null}">
-                <input class="form-check-input" type="checkbox" name="termsAccepted" checked id="inputAcceptTerms" required/>
+                <input class="form-check-input" type="checkbox" name="termsAccepted" checked id="inputAcceptTerms"
+                       required/>
             </c:if>
 
         </div>
@@ -164,9 +165,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#inputDate').mask('00/00/0000');
         $('#inputVisitorCpf').mask('000.000.000-00');
-        $('#inputTime').mask('00:00');
+        // $('#inputTime').mask('00:00');
     });
 </script>
 </body>

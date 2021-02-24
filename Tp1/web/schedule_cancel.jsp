@@ -13,8 +13,9 @@
 </head>
 <body>
 
+<jsp:useBean id="formatterUtils" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.util.FormatterUtils"/>
 <c:set var="schedule" value="${requestScope.schedule}" scope="session"/>
-<c:set var="errorMessage" value="${requestScope.errorMessage}"/>
+<c:set var="message" value="${requestScope.message}"/>
 
 <c:import url="header.jsp"/>
 
@@ -24,15 +25,19 @@
 
     <table class="table align-content-center table-striped" style="vertical-align: middle">
         <tr>
+            <td><b>Código</b></td>
+            <td>${schedule.confirmationCode}</td>
+        </tr>
+        <tr>
             <td><b>Museu</b></td>
             <td>${schedule.museum.name}</td>
         </tr>
         <tr>
-            <td><b>Data da visitacao</b></td>
-            <td>${schedule.date}</td>
+            <td><b>Data da visitação</b></td>
+            <td>${schedule.date.format(formatterUtils.brazilianDateFormatter)}</td>
         </tr>
         <tr>
-            <td><b>Horario</b></td>
+            <td><b>Horário</b></td>
             <td>${schedule.hours}</td>
         </tr>
         <tr>
@@ -40,7 +45,7 @@
             <td>${schedule.visitorsCount}</td>
         </tr>
         <tr>
-            <td><b>Email do agendador</b></td>
+            <td><b>E-mail do agendador</b></td>
             <td>${schedule.schedulerEmail}</td>
         </tr>
     </table>
@@ -51,16 +56,16 @@
             <hr class="mb-4"/>
         </div>
 
-        <c:if test="${schedule.visitorsCount > schedule.visitors.size()}">
-            <c:if test="${not empty errorMessage}">
-                <div class="alert alert-danger" role="alert">
-                        ${errorMessage.message}
-                </div>
-            </c:if>
+        <c:if test="${schedule.visitorsCount == 1}">
+            <div class="alert alert-info" role="alert">
+                Ao remover uma pessoa de um agendamento com apenas um visitante, o mesmo será cancelado.
+            </div>
+        </c:if>
 
-            <%--            <div class="alert alert-info" role="alert">--%>
-            <%--                Informe os dados dos ${schedule.visitorsCount} visitantes para confirmar o agendamento.--%>
-            <%--            </div>--%>
+        <c:if test="${not empty message}">
+            <div class="alert alert-${message.type.toString().toLowerCase()}" role="alert">
+                    ${message.message}
+            </div>
         </c:if>
 
         <c:set var="visitors" value="${schedule.visitors}"/>
@@ -74,27 +79,35 @@
                 </tr>
                 <c:forEach var="visitor" items="${visitors}">
                     <tr>
-                        <th>
+                        <td>
                             <form action="scheduler" method="post">
-                                <input type="hidden" name="logic" value="RemoveVisitorOnBdLogic"/>
+                                <c:if test="${schedule.visitorsCount > 1}">
+                                    <input type="hidden" name="logic" value="RemoveVisitorOnBdLogic"/>
+                                </c:if>
+                                <c:if test="${schedule.visitorsCount == 1}">
+                                    <input type="hidden" name="logic" value="CancelScheduleLogic"/>
+                                </c:if>
                                 <input type="hidden" name="cpf" value="${visitor.cpf}"/>
+                                <input type="hidden" name="schedule_id" value="${schedule.id}"/>
                                 <button class="btn btn-outline-danger" type="submit">Remover</button>
                             </form>
-                        </th>
+                        </td>
+
                         <td>${visitor.cpf}</td>
                         <td>${visitor.name}</td>
                         <td>${visitor.ticketType.description}</td>
                     </tr>
                 </c:forEach>
             </table>
-
-            <form class="row g-3" action="scheduler" method="post">
-                <input type="hidden" name="logic" value="CancelScheduleLogic">
-                <div class="col-12 pb-3">
-                    <button class="btn btn-custom" type="submit">Cancelar agendamento</button>
-                </div>
-            </form>
         </c:if>
+
+        <form class="row g-3" action="scheduler" method="post">
+            <input type="hidden" name="logic" value="CancelScheduleLogic">
+            <input type="hidden" name="schedule_id" value="${schedule.id}"/>
+            <div class="col-12 pb-3">
+                <button class="btn btn-danger" type="submit">Cancelar agendamento</button>
+            </div>
+        </form>
     </c:if>
 </div>
 

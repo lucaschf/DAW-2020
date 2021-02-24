@@ -5,16 +5,24 @@ import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.*;
+
 public class ScheduleHtmlReceiptGenerator {
 
     private Schedule schedule;
+    private ReceiptType type;
 
-    public ScheduleHtmlReceiptGenerator(Schedule schedule) {
+    public ScheduleHtmlReceiptGenerator(Schedule schedule, ReceiptType type) {
         this.schedule = schedule;
+        this.type = type;
     }
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
+    }
+
+    public void setType(ReceiptType type) {
+        this.type = type;
     }
 
     public String generateReceipt() {
@@ -26,20 +34,14 @@ public class ScheduleHtmlReceiptGenerator {
                 + generateMainTable() + "</body>";
     }
 
-    private String generateDataTable(String tableContent) {
-        return "<tr><td><table style='overflow-x: hidden;" +
-                "border: 0;" +
-                "align-content: center;" +
-                "padding-bottom: 20px;" +
-                "border-radius: 10px;" +
-                "text-align: center;" +
-                "background-color: #fff'>" +
-                "<tbody>" +
-                tableContent +
-                "</tbody>" +
-                "</table>" +
-                "</td>" +
-                "</tr>";
+    private String getTitle() {
+        if (type == ReceiptType.CREATION)
+            return SCHEDULE_CONFIRMED;
+
+        if (type == ReceiptType.CANCELLATION)
+            return SCHEDULE_CANCELLED;
+
+        return SCHEDULE_UPDATED;
     }
 
     private String generateMainTable() {
@@ -58,15 +60,104 @@ public class ScheduleHtmlReceiptGenerator {
                 "<table>";
     }
 
-    private String generateVisitorsInfo(Schedule schedule) {
-        var info = new StringBuilder();
+    private String generateDataTable(String tableContent) {
+        return "<tr><td><table style='overflow-x: hidden;" +
+                "border: 0;" +
+                "align-content: center;" +
+                "padding-bottom: 20px;" +
+                "border-radius: 10px;" +
+                "text-align: center;" +
+                "background-color: #fff'>" +
+                "<tbody>" +
+                tableContent +
+                "</tbody>" +
+                "</table>" +
+                "</td>" +
+                "</tr>";
+    }
 
-        schedule.getVisitors().forEach(v -> info.append(generateTrScheduleInfo("Nome", v.getName()))
-                .append(generateTrScheduleInfo("Cpf", v.getCpf().getNumeroFormatado()))
-                .append(generateTrScheduleInfo("Tipo de ingresso", v.getTicketType().toString()))
-                .append("<tr><td style='padding: 10px'></td></tr>")
-        );
+    private String generateHeaderLogo() {
+        return " <tr>" +
+                "<td align='center'>" +
+                "<img src='https://raw.githubusercontent.com/lucaschf/DAW-2020/main/Tp1/web/images/logo_.png'" +
+                "alt='Logo' style=' width: 64px;margin-top: 40px; margin-bottom: 16px'>" +
+                "</td>" +
+                "</tr>";
+    }
 
+    private String generateTitle() {
+        return " <tr>" +
+                "<td style='padding: 20px 40px 0px 40px; text-align: center;'>" +
+                "<h1 style='  color: #8e24aa;" +
+                "margin: 0;" +
+                "font-size: 22px;" +
+                "line-height: 150%'>" +
+                getTitle() +
+                "</h1>" +
+                "<hr/>" +
+                "</td>" +
+                "</tr>";
+    }
+
+    private String generateScheduleDateData(LocalDate date) {
+        return "<tr>" +
+                "<td>" +
+                "<p style='font-size: 18px;" +
+                "line-height: 150%;" +
+                "font-weight: bold;" +
+                "text-align: center;" +
+                "margin: 16px;" +
+                "color: #5d666f'" +
+                ">" +
+                generateSubtitle() +
+                "<h1 style='  color: #8e24aa;" +
+                "margin: 0;" +
+                "font-size: 22px;" +
+                "line-height: 150%'>" +
+                date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
+                "</h1>" +
+                "</p>" +
+                "</td>" +
+                "</tr>";
+    }
+
+    private String generateSubtitle() {
+        if (type == ReceiptType.CREATION)
+            return YOUR_SCHEDULE_IS_CONFIRMED_FOR;
+
+        if (type == ReceiptType.CANCELLATION)
+            return YOUR_SCHEDULE_IS_CANCELLED;
+
+        return YOUR_SCHEDULE_IS_UPDATED;
+    }
+
+    private String generateReceiptImage() {
+        return "<tr>" +
+                "<td style='padding: 20px 40px 0px 40px;'>" +
+                "<div style='margin-left: auto;" +
+                "margin-right: auto;" +
+                "width: 192px;" +
+                "height: 192px;" +
+                "background: #fff url('" + getImageUrl() + "') no-repeat center;" +
+                "background-size: contain;'>" +
+                "</div>" +
+                "</td>" +
+                "</tr>";
+    }
+
+    private String getImageUrl(){
+        final String baseImageUrl = "https://raw.githubusercontent.com/lucaschf/DAW-2020/main/Tp1/web/images/";
+
+        if (type == ReceiptType.CREATION)
+            return baseImageUrl + "undraw_online_calendar.png";
+
+        if (type == ReceiptType.CANCELLATION)
+            return baseImageUrl + "undraw_startled.png";
+
+        return baseImageUrl + "undraw_booking.png";
+    }
+
+    private String generateAdditionalInfo() {
         return "<tr>" +
                 "<td>" +
                 "<p style='font-size: 20px;" +
@@ -74,24 +165,11 @@ public class ScheduleHtmlReceiptGenerator {
                 "font-weight: bold;" +
                 "text-align: center;" +
                 "margin: 0;" +
-                "color: #5d666f'>" +
-                "Visitantes" +
+                "color: #5d666f'" +
+                ">" +
+                (type == ReceiptType.CREATION ? YOU_PERFORMED_A : type == ReceiptType.UPDATE ? YOU_CHANGED : YOU_CANCELLED) +
+                "<span style='color:#8e24aa'>" + SCHEDULE + "</span>" +
                 "</p>" +
-                "</td>" +
-                "</tr>" +
-                generateTrSeparator() +
-                generateInnerTable(info.toString());
-    }
-
-
-    private String generateInnerTable(String tableData) {
-        return "<tr>" +
-                "<td style='padding: 20px 40px 0px 40px;'>" +
-                "<table style='width: 100%'>" +
-                "<tbody>" +
-                tableData +
-                "</tbody>" +
-                "</table>" +
                 "</td>" +
                 "</tr>";
     }
@@ -123,85 +201,6 @@ public class ScheduleHtmlReceiptGenerator {
                 ;
     }
 
-    private String generateAdditionalInfo() {
-        return "<tr>" +
-                "<td>" +
-                "<p style='font-size: 20px;" +
-                "line-height: 150%;" +
-                "font-weight: bold;" +
-                "text-align: center;" +
-                "margin: 0;" +
-                "color: #5d666f'" +
-                ">" +
-                "Você realizou um <span style='color:#8e24aa'>agendamento</span>" +
-                "</p>" +
-                "</td>" +
-                "</tr>";
-    }
-
-    private String generateReceiptImage() {
-        return "<tr>" +
-                "<td style='padding: 20px 40px 0px 40px;'>" +
-                "<div style='margin-left: auto;" +
-                "margin-right: auto;" +
-                "width: 192px;" +
-                "height: 192px;" +
-                "background: #fff url(\"https://raw.githubusercontent.com/lucaschf/DAW-2020/main/Tp1/web/images/undraw_online_calendar.png\") no-repeat center;" +
-                "background-size: contain;'>" +
-                "</div>" +
-                "</td>" +
-                "</tr>";
-    }
-
-    private String generateScheduleDateData(LocalDate date) {
-        return "<tr>" +
-                "<td>" +
-                "<p style='font-size: 18px;" +
-                "line-height: 150%;" +
-                "font-weight: bold;" +
-                "text-align: center;" +
-                "margin: 16px;" +
-                "color: #5d666f'" +
-                ">" +
-                "O seu agendamento foi confirmado para" +
-                "<h1 style='  color: #8e24aa;" +
-                "margin: 0;" +
-                "font-size: 22px;" +
-                "line-height: 150%'>" +
-                date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
-                "</h1>" +
-                "</p>" +
-                "</td>" +
-                "</tr>";
-    }
-
-    private String generateHeaderLogo() {
-        return " <tr>" +
-                "<td align='center'>" +
-                "<img src='https://raw.githubusercontent.com/lucaschf/DAW-2020/main/Tp1/web/images/logo_.png'" +
-                "alt='Logo' style=' width: 64px;margin-top: 40px; margin-bottom: 16px'>" +
-                "</td>" +
-                "</tr>";
-    }
-
-    private String generateTitle() {
-        return " <tr>" +
-                "<td style='padding: 20px 40px 0px 40px; text-align: center;'>" +
-                "<h1 style='  color: #8e24aa;" +
-                "margin: 0;" +
-                "font-size: 22px;" +
-                "line-height: 150%'>" +
-                "Agendamento confirmado!" +
-                "</h1>" +
-                "<hr/>" +
-                "</td>" +
-                "</tr>";
-    }
-
-    private String generateTrSeparator() {
-        return "<tr><td style='padding: 20px;'><hr/></td></tr>";
-    }
-
     private String generateBaseScheduleInfo(Schedule schedule) {
         return String.format("%s" +
                         "<tr>" +
@@ -220,6 +219,47 @@ public class ScheduleHtmlReceiptGenerator {
                 generateTrScheduleInfo("Horário da visita", schedule.getHours().toString()),
                 generateTrScheduleInfo("Visitantes", String.valueOf(schedule.getVisitorsCount()))
         );
+    }
+
+    private String generateVisitorsInfo(Schedule schedule) {
+        var info = new StringBuilder();
+
+        schedule.getVisitors().forEach(v -> info.append(generateTrScheduleInfo("Nome", v.getName()))
+                .append(generateTrScheduleInfo("Cpf", v.getCpf().getNumeroFormatado()))
+                .append(generateTrScheduleInfo("Tipo de ingresso", v.getTicketType().toString()))
+                .append("<tr><td style='padding: 10px'></td></tr>")
+        );
+
+        return "<tr>" +
+                "<td>" +
+                "<p style='font-size: 20px;" +
+                "line-height: 150%;" +
+                "font-weight: bold;" +
+                "text-align: center;" +
+                "margin: 0;" +
+                "color: #5d666f'>" +
+                "Visitantes" +
+                "</p>" +
+                "</td>" +
+                "</tr>" +
+                generateTrSeparator() +
+                generateInnerTable(info.toString());
+    }
+
+    private String generateInnerTable(String tableData) {
+        return "<tr>" +
+                "<td style='padding: 20px 40px 0px 40px;'>" +
+                "<table style='width: 100%'>" +
+                "<tbody>" +
+                tableData +
+                "</tbody>" +
+                "</table>" +
+                "</td>" +
+                "</tr>";
+    }
+
+    private String generateTrSeparator() {
+        return "<tr><td style='padding: 20px;'><hr/></td></tr>";
     }
 
     private String generateTrScheduleInfo(String name, String data) {
@@ -248,4 +288,6 @@ public class ScheduleHtmlReceiptGenerator {
                 "</td>" +
                 "</tr>";
     }
+
+    public enum ReceiptType {CREATION, UPDATE, CANCELLATION}
 }

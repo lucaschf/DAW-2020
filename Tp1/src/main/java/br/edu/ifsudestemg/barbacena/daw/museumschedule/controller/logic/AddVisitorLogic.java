@@ -1,7 +1,7 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
 import br.com.caelum.stella.tinytype.CPF;
-import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.ErrorMessage;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.TicketType;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Visitor;
@@ -37,12 +37,12 @@ public class AddVisitorLogic implements Logic {
 
 
         if (!visitor.getCpf().isValido()) {
-            request.setAttribute("errorMessage", new ErrorMessage("", INVALID_CPF));
+            request.setAttribute(MESSAGE_PARAM, new Message("", INVALID_CPF));
             return sourcePage;
         }
 
         if(!schedule.addVisitor(visitor)){
-            request.setAttribute("errorMessage", new ErrorMessage("", FAIL_TO_ADD_VISITOR));
+            request.setAttribute(MESSAGE_PARAM, new Message("", FAIL_TO_ADD_VISITOR));
             return sourcePage;
         }
 
