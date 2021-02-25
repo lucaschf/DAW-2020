@@ -17,7 +17,6 @@
 <jsp:useBean id="museumDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO"/>
 <jsp:useBean id="localDateBean" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.model.LocalDateBean"/>
 <c:set var="museums" value="${museumDao.fetchAll()}"/>
-<%--<c:set var="message" value="${requestScope.message}"/>--%>
 <c:set var="schedule" value="${requestScope.schedule}"/>
 
 <div class="container pt-3">
@@ -29,7 +28,7 @@
             <th>Museu</th>
             <th>Visitantes simultâneos</th>
             <th>Funcionamento</th>
-            <th>Hórario de funcionamento</th>
+            <th>Hórario de visitas</th>
             <th>Intervalo entre visitas</th>
         </tr>
 
@@ -77,8 +76,9 @@
 
         <div class="col-md-3">
             <label for="inputEmail" class="form-label">E-mail</label>
-            <input type="text" name="email" class="form-control" id="inputEmail" value="${schedule.schedulerEmail}"
-                   required>
+            <input type="text" name="email" class="form-control" id="inputEmail"
+                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                   value="${schedule.schedulerEmail}" required>
         </div>
 
         <div class="col-md-3">
@@ -162,7 +162,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#inputVisitorCpf').mask('000.000.000-00');
-        // $('#inputTime').mask('00:00');
     });
 </script>
 </body>

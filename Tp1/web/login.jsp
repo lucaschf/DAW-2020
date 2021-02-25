@@ -24,6 +24,7 @@
 <div class="container">
     <form class="g-3 col-md-3 m-auto" style="vertical-align: middle" method="post" action="scheduler">
         <input type="hidden" name="logic" value="Login"/>
+        <input type="hidden" name="target" value="${requestScope.target}"/>
 
         <div class="col">
             <img class="mx-auto d-block mb-2" src="images/logo_.png" alt="" width="72px" height="72px">
@@ -33,7 +34,7 @@
 
         <div class="col mb-2">
             <label for="inputUsername" class="form-label">Usuário</label>
-            <input type="text" name="username" class="form-control" id="inputUsername" required>
+            <input type="text" name="username" class="form-control" id="inputUsername" value="${requestScope.username}" required>
         </div>
 
         <div class="col mb-3">

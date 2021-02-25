@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -24,16 +25,6 @@
                     <a class="nav-link active" aria-current="page" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Funcionários
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
-                        <li><a class="dropdown-item" href="employee-list.jsp">Listagem</a></li>
-                        <li><a class="dropdown-item" href="employee-registration.jsp">Cadastro</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="scheduleDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
                         Agendamentos
@@ -44,13 +35,50 @@
                         <li><a class="dropdown-item" href="search_schedule.jsp">Editar</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="login.jsp">Login</a>
-                </li>
+                <c:if test="${sessionScope.user != null}">
+                    <c:if test="${sessionScope.user.role.is_system_admin}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Funcionários
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
+                                <li><a class="dropdown-item" href="employee-list.jsp">Listagem</a></li>
+                                <li><a class="dropdown-item" href="employee-registration.jsp">Cadastro</a></li>
+                            </ul>
+                        </li>
+                    </c:if>
 
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="scheduler?logic=Logout">Logout</a>
-                </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Relatórios
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="reportDropdown">
+                            <li><a class="dropdown-item" href="employee-list.jsp">Visitantes por dia</a></li>
+                            <li><a class="dropdown-item" href="employee-registration.jsp">Visitantes por data</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item me-auto dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="loggedUserDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
+                                 class="rounded-circle"
+                                 height="22"
+                                 alt=""/>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="loggedUserDropdown">
+                            <li class="nav-item p-2"> Logado como ${sessionScope.user.username}</li>
+                            <li><a class="nav-link" aria-current="page" href="scheduler?logic=Logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </c:if>
+                <c:if test="${sessionScope.user == null}">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="login.jsp">Login</a>
+                    </li>
+                </c:if>
             </ul>
         </div>
     </div>

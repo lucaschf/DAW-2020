@@ -46,13 +46,7 @@ CREATE TABLE visitor(
 	PRIMARY KEY (schedule_id, cpf)
 );
 
-ALTER TABLE visitor ADD COLUMN attended BOOLEAN NOT NULL DEFAULT FALSE;
-
---CREATE TABLE visited_museum_at_day(
---	visit_date DATE REFERENCES schedule(schedule_date),
---	visit_time TIME NOT NULL,
---	cpf CHARACTER VARYING(11) NOT NULL,
---)
+ALTER TABLE visitor ADD COLUMN attended BOOLEAN NOT NULL DEFAULT FALSE;	
 
 CREATE OR REPLACE FUNCTION booked_visitors(museumId BIGINT, _date DATE) RETURNS TABLE(
 	visitors INT,
@@ -149,7 +143,48 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER update_vistors_count AFTER DELETE ON visitor
 	FOR EACH ROW EXECUTE FUNCTION update_schedule_visitors_count();
 
-DELETE FROM visitor Where cpf = '10856446696'
+
+DROP TABLE users;
+DROP TABLE role;
+
+CREATE TABLE role(
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50) NOT NULL UNIQUE,
+	is_museum_linked BOOLEAN NOT NULL DEFAULT true
+);
+
+CREATE TABLE users(
+	username VARCHAR(30) PRIMARY KEY,
+	password VARCHAR(50) NOT NULL,
+	role_id INTEGER REFERENCES role(id) ON DELETE CASCADE,
+	museum_id INTEGER NULL REFERENCES museum(id),
+	created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE OR REPLACE FUNCTION check_user_data_before_insert() RETURNS TRIGGER AS $$
+	DECLARE
+		is_museum_linked BOOLEAN;
+	BEGIN 
+		SELECT role.is_museum_linked FROM role WHERE role.id = NEW.role_id INTO is_museum_linked;
+		if is_museum_linked AND NEW.museum_id IS NULL THEN 
+			RAISE EXCEPTION 'Invalid museum_id';
+			RETURN NULL;
+		ELSE 
+			RETURN NEW;
+		END IF;
+	END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER check_user_role_before_insert BEFORE INSERT ON users
+	FOR EACH ROW EXECUTE FUNCTION check_user_data_before_insert();
+
+INSERT INTO role(name, is_museum_linked) VALUES
+		('ADMINISTRATOR', false),
+		('EMPLOYEE', true);
+		
+INSERT INTO public.users(
+	username, password, role_id, museum_id)
+	VALUES ('admin', 'admin', 1, NULL);
 
 INSERT INTO public.museum_working_days(
 	museum_id, day_of_week)

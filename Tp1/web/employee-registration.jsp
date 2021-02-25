@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="ISO-8859-1" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="auth.jsp"%>
 
 <!DOCTYPE html>
 <html>
@@ -14,7 +15,6 @@
 <body>
 <c:import url="header.jsp"/>
 <jsp:useBean id="museumDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO"/>
-<jsp:useBean id="employeDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.EmployeeDao"/>
 
 <div class="container pt-3">
     <h2>Registro de funcionários</h2>
@@ -22,25 +22,41 @@
 </div>
 
 <div class="container">
+
+    <%@include file="message.jsp"%>
+
     <form class="row g-3" action="scheduler" method="post">
-        <input type="hidden" name="logic" value="AddEmployeeLogic"/>
+        <input type="hidden" name="logic" value="AddEmployeeUser"/>
 
         <div class="col-md-3">
             <label for="inputName" class="form-label">Nome</label>
-            <input type="text" name="name" class="form-control" id="inputName" required>
+            <input type="text" name="password"  value="${requestScope.password}" class="form-control" id="inputName" required>
         </div>
 
         <div class="col-md-3">
             <label for="inputCpf" class="form-label">CPF</label>
-            <input type="text" name="cpf" class="form-control" id="inputCpf" required>
+            <input type="text" name="username" class="form-control" value="${requestScope.username}" id="inputCpf" required>
         </div>
 
         <div class="col-md-3">
             <label for="choiceMuseum" class="form-label">Museu</label>
             <select class="form-select" name="museum_id" id="choiceMuseum" required>
-                <option selected disabled value="">Escolha...</option>
-                <c:forEach var="museum" items="${ museumDao.fetchAll()}" varStatus="id">
-                    <option value="${museum.id}">${museum.name} </option>
+                <c:if test="${not empty requestScope.museum_id}">
+                    <option disabled value="">Escolha...</option>
+                </c:if>
+
+                <c:if test="${empty requestScope.museum_id}">
+                    <option selected disabled value="">Escolha...</option>
+                </c:if>
+
+                <c:forEach var="museum" items="${ museumDao.fetchAll()}">
+                    <c:if test="${museum.id == requestScope.museum_id}">
+                        <option selected value="${museum.id}">${museum.name}</option>
+                    </c:if>
+
+                    <c:if test="${museum.id != requestScope.museum_id}">
+                        <option value="${museum.id}">${museum.name}</option>
+                    </c:if>
                 </c:forEach>
             </select>
         </div>
@@ -49,24 +65,6 @@
             <button class="btn btn-outline-custom" type="submit">Adicionar funcionário</button>
         </div>
     </form>
-
-    <c:set var="employees" value="${employeDao.fetchAll()}"/>
-    <c:if test="${not empty employees}">
-        <table class="table table-striped">
-            <tr>
-                <th>Cpf</th>
-                <th>Nome</th>
-                <th>Museu</th>
-            </tr>
-            <c:forEach var="employee" items="${employees}">
-                <tr>
-                    <td>${employee.cpf}</td>
-                    <td>${employee.name}</td>
-                    <td>${employee.museum.name}</td>
-                </tr>
-            </c:forEach>
-        </table>
-    </c:if>
 </div>
 
 <c:import url="footer.jsp"/>

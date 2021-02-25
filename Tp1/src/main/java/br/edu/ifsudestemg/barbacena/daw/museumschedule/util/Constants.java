@@ -24,4 +24,6 @@ public interface Constants {
     String YOUR_SCHEDULE_IS_CANCELLED  = "Um cancelamento foi realizado no agendamento do dia";
     String SCHEDULE_CANCELLATION  = "Cancelamento de agendamento";
     String FAIL_TO_CANCEL_SCHEDULE = "Não foi possive cancelar o agendamento.Tente novamente mais tarde";
+    String USER_SUCCESSFUL_ADDED = "Usuário inserido com sucesso.";
+    String FAIL_TO_ADD_USER = "Falha ao inserir usuário.";
 }
