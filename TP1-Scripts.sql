@@ -20,12 +20,6 @@ CREATE TABLE museum_working_days (
 	PRIMARY KEY (museum_id, day_of_week)
 );
 
-CREATE TABLE museum_employee (	
-	cpf  CHARACTER VARYING(11) PRIMARY KEY,
-	name CHARACTER VARYING(100) NOT NULL,
-	museum_id bigint REFERENCES museum(id)
-);
-
 CREATE TABLE schedule(
 	id SERIAL PRIMARY KEY,
 	scheduler_email CHARACTER VARYING(50) NOT NULL,
@@ -150,7 +144,7 @@ DROP TABLE role;
 CREATE TABLE role(
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(50) NOT NULL UNIQUE,
-	is_museum_linked BOOLEAN NOT NULL DEFAULT true
+	is_admin BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE users(
@@ -163,10 +157,10 @@ CREATE TABLE users(
 
 CREATE OR REPLACE FUNCTION check_user_data_before_insert() RETURNS TRIGGER AS $$
 	DECLARE
-		is_museum_linked BOOLEAN;
+		is_admin BOOLEAN;
 	BEGIN 
-		SELECT role.is_museum_linked FROM role WHERE role.id = NEW.role_id INTO is_museum_linked;
-		if is_museum_linked AND NEW.museum_id IS NULL THEN 
+		SELECT role.is_admin FROM role WHERE role.id = NEW.role_id INTO is_admin;
+		if NOT is_admin AND NEW.museum_id IS NULL THEN 
 			RAISE EXCEPTION 'Invalid museum_id';
 			RETURN NULL;
 		ELSE 
@@ -178,13 +172,49 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_user_role_before_insert BEFORE INSERT ON users
 	FOR EACH ROW EXECUTE FUNCTION check_user_data_before_insert();
 
-INSERT INTO role(name, is_museum_linked) VALUES
-		('ADMINISTRATOR', false),
-		('EMPLOYEE', true);
+INSERT INTO role(name, is_admin) VALUES
+		('ADMINISTRATOR', true),
+		('EMPLOYEE', false);
 		
 INSERT INTO public.users(
 	username, password, role_id, museum_id)
 	VALUES ('admin', 'admin', 1, NULL);
+	
+DROP FUNCTION visitors_per_day;
+CREATE OR REPLACE FUNCTION visitors_per_day(visit_date DATE, museumId INTEGER) RETURNS TABLE(
+	schedule_id INTEGER,
+	cpf CHARACTER VARYING(11),
+	name CHARACTER VARYING(100),
+	attended BOOLEAN,
+	ticket_type INTEGER,
+	schedule_number TEXT,
+	schedule_date DATE,
+	schedule_time TIME,
+	scheduler_email CHARACTER VARYING(50),
+	museum_name CHARACTER VARYING(255)
+)  AS $$
+	BEGIN
+		RETURN QUERY SELECT
+			schedule.id,
+			visitor.cpf,
+			visitor.name,
+			visitor.attended, 
+			visitor.ticket_type,
+			schedule.code,
+			schedule.schedule_date,
+			schedule.schedule_time,
+			schedule.scheduler_email,
+			museum.name as museum_name
+		FROM schedule 
+		INNER JOIN visitor ON visitor.schedule_id = schedule.id
+		INNER JOIN museum ON museum.id = schedule.museum_id
+		WHERE schedule.schedule_date = visit_date AND schedule.museum_id = museumId
+		ORDER BY schedule.schedule_time
+		;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+SELECT * FROM visitors_per_day('2021-02-25', 1)
 
 INSERT INTO public.museum_working_days(
 	museum_id, day_of_week)
