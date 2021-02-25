@@ -1,13 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="ISO-8859-1" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@include file="auth.jsp"%>
+<%@include file="auth_as_admin.jsp"%>
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Employee registration</title>
+    <title>User registration</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
@@ -17,25 +17,26 @@
 <jsp:useBean id="museumDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO"/>
 
 <div class="container pt-3">
-    <h2>Registro de funcionários</h2>
+    <h2>Registro de usuário</h2>
     <hr class="mb-5"/>
 </div>
 
 <div class="container">
 
+    <c:if test="${empty requestScope.message}">
+        <div class="alert alert-info" role="alert">
+            Informe os dados do funcionário para qual deseja criar um usuário.
+        </div>
+    </c:if>
+
     <%@include file="message.jsp"%>
 
     <form class="row g-3" action="scheduler" method="post">
-        <input type="hidden" name="logic" value="AddEmployeeUser"/>
-
-        <div class="col-md-3">
-            <label for="inputName" class="form-label">Nome</label>
-            <input type="text" name="password"  value="${requestScope.password}" class="form-control" id="inputName" required>
-        </div>
+        <input type="hidden" name="logic" value="SearchEmployee"/>
 
         <div class="col-md-3">
             <label for="inputCpf" class="form-label">CPF</label>
-            <input type="text" name="username" class="form-control" value="${requestScope.username}" id="inputCpf" required>
+            <input type="text" name="cpf" class="form-control" value="${requestScope.cpf}" id="inputCpf" required>
         </div>
 
         <div class="col-md-3">
@@ -62,7 +63,7 @@
         </div>
 
         <div class="col-12 pb-3">
-            <button class="btn btn-outline-custom" type="submit">Adicionar funcionário</button>
+            <button class="btn btn-outline-custom" type="submit">Recuperar</button>
         </div>
     </form>
 </div>

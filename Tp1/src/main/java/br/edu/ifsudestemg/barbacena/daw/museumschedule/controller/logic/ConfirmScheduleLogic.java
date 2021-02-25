@@ -16,7 +16,7 @@ public class ConfirmScheduleLogic implements Logic {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         final String scheduleAttr = "schedule";
         String sourcePage = "/schedule_museum_add_visitors.jsp";
-        String url = "/schedules-list.jsp";
+        String url = "/schedules_list.jsp";
 
         Schedule schedule = (Schedule) request.getSession().getAttribute(scheduleAttr);
         request.getSession().removeAttribute(scheduleAttr);

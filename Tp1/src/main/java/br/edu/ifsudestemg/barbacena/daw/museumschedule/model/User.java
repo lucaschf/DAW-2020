@@ -7,7 +7,7 @@ public class User implements Cloneable {
     private String username;
     private String password;
     private LocalDateTime createdAt;
-    private Long museum_id;
+    private Long employeeId;
     private Role role;
 
     public String getUsername() {
@@ -34,12 +34,12 @@ public class User implements Cloneable {
         this.createdAt = createdAt;
     }
 
-    public Long getMuseum_id() {
-        return museum_id;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setMuseum_id(Long museum_id) {
-        this.museum_id = museum_id;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     public Role getRole() {
@@ -68,24 +68,28 @@ public class User implements Cloneable {
         return (User) super.clone();
     }
 
+    public boolean isSystemAdmin(){
+        return role.isSystemAdmin();
+    }
+
     public enum Role {
         ADMIN(1, true),
         EMPLOYEE(2, false);
 
         private final int code;
-        private final boolean is_system_admin;
+        private final boolean systemAdmin;
 
-        Role(int code, boolean is_system_admin) {
+        Role(int code, boolean systemAdmin) {
             this.code = code;
-            this.is_system_admin = is_system_admin;
+            this.systemAdmin = systemAdmin;
         }
 
         public int getCode() {
             return code;
         }
 
-        public boolean isIs_system_admin() {
-            return is_system_admin;
+        public boolean isSystemAdmin() {
+            return systemAdmin;
         }
 
         public static Role from(int code) {

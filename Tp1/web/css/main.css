@@ -74,6 +74,10 @@
 .error-404-bg {
     background-image: url(../images/undraw_page_not_found.svg);
 }
+.empty_bg {
+    background-size: 250px 250px;
+    background-image: url(../images/undraw_empty.svg);
+}
 
 .error_bg h1 {
     font-size: 80px;

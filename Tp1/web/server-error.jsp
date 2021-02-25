@@ -20,8 +20,6 @@
 
                     <div class="content-box-error">
                         <c:set var="message" value="${requestScope.message}"/>
-                        <c:set var="source_page" value="${requestScope.source_page}"/>
-                        <c:set var="incoming_data" value="${requestScope.incoming_data}"/>
                         <h2> Ooops!</h2>
 
                         <p>
@@ -32,13 +30,7 @@
                                 Something went wrong...
                             </c:if>
                         </p>
-
-                        <c:if test="${empty source_page}">
-                            <a href="index.jsp" class="btn btn-outline-custom">Home</a>
-                        </c:if>
-                        <c:if test="${not empty source_page}">
-                            <a href="${source_page}" class="btn btn-outline-custom">Voltar</a>
-                        </c:if>
+                        <a href="index.jsp" class="btn btn-outline-custom">Home</a>
                     </div>
                 </div>
             </div>

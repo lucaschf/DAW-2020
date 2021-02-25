@@ -1,8 +1,11 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
 import br.com.caelum.stella.tinytype.CPF;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.EmployeeDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.UserDao;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Employee;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Museum;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,33 +14,32 @@ import javax.servlet.http.HttpServletResponse;
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message.MessageType.SUCCESS;
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.*;
 
-public class AddEmployeeUser implements Logic {
+public class AddEmployee implements Logic {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        var password = request.getParameter("password");
-        var username = new CPF(request.getParameter("username"));
+        var name = request.getParameter("name");
+        var cpf = new CPF(request.getParameter("cpf"));
         long museum_id = Long.parseLong(request.getParameter("museum_id"));
 
-        var url = "employee-registration.jsp";
+        var url = "employee_registration.jsp";
 
-        if(!username.isValido()){
+        if(!cpf.isValido()){
             request.setAttribute(MESSAGE_PARAM, new Message(INVALID_CPF));
-            putBackData(request, password, username, museum_id);
+            putBackData(request, name, cpf, museum_id);
         }else
         {
-            User user = new User();
+            Employee employee = new Employee();
 
-            user.setRole(User.Role.EMPLOYEE);
-            user.setMuseum_id(museum_id);
-            user.setUsername(username.getNumero());
-            user.setPassword(password);
+            employee.setMuseum(new Museum().setId(museum_id));
+            employee.setCpf(cpf);
+            employee.setName(name);
 
-            if(new UserDao().add(user)){
-                request.setAttribute(MESSAGE_PARAM, new Message(USER_SUCCESSFUL_ADDED, SUCCESS));
+            if(new EmployeeDao().add(employee)){
+                request.setAttribute(MESSAGE_PARAM, new Message(EMPLOYEE_SUCCESSFUL_ADDED, SUCCESS));
             }else{
-                request.setAttribute(MESSAGE_PARAM, new Message(FAIL_TO_ADD_USER));
-                putBackData(request, password, username, museum_id);
+                request.setAttribute(MESSAGE_PARAM, new Message(FAIL_TO_ADD_EMPLOYEE));
+                putBackData(request, name, cpf, museum_id);
             }
         }
 
@@ -45,8 +47,8 @@ public class AddEmployeeUser implements Logic {
     }
 
     private void putBackData(HttpServletRequest request, String password, CPF username, long museum_id) {
-        request.setAttribute("username", username);
-        request.setAttribute("password", password);
+        request.setAttribute("name", username);
+        request.setAttribute("cpf", password);
         request.setAttribute("museum_id", museum_id);
     }
 }

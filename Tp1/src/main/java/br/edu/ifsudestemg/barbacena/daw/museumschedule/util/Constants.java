@@ -24,6 +24,15 @@ public interface Constants {
     String YOUR_SCHEDULE_IS_CANCELLED  = "Um cancelamento foi realizado no agendamento do dia";
     String SCHEDULE_CANCELLATION  = "Cancelamento de agendamento";
     String FAIL_TO_CANCEL_SCHEDULE = "Não foi possive cancelar o agendamento.Tente novamente mais tarde";
+    String EMPLOYEE_SUCCESSFUL_ADDED = "Funcionário inserido com sucesso.";
     String USER_SUCCESSFUL_ADDED = "Usuário inserido com sucesso.";
     String FAIL_TO_ADD_USER = "Falha ao inserir usuário.";
+    String FAIL_TO_ADD_EMPLOYEE = "Falha ao inserir funcionário.";
+    String FAIL_TO_REMOVE_EMPLOYEE = "Falha ao remover funcionário.";
+    String EMPLOYEE_SUCCESSFUL_REMOVED = "Funcionário removido com sucesso.";
+    String USER_SUCCESSFUL_REMOVED = "Usuário removido com sucesso.";
+    String EMPLOYEE_NOT_FOUND = "Funcionário não encontrado";
+    String FAIL_TO_REMOVE_USER = "Falha ao remover usuário";
+    String USER_ALREADY_REGISTERED_FOR_THIS_EMPLOYEE = "Já existe um usuário registrado para este funcionário";
+    String PASSWORDS_DOESNT_MATCH = "As senhas nao coincidem";
 }

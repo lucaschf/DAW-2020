@@ -34,11 +34,11 @@
 
         <c:forEach var="museum" items="${museums}">
             <tr>
-                <th>${museum.name}</th>
-                <th>${museum.visitorsLimit}</th>
-                <th>${museum.getWorkingDaysDisplayNames()}</th>
-                <th>${museum.opensAt} às ${museum.closesAt}</th>
-                <th>${museum.minutesBetweenVisits} minutos</th>
+                <td>${museum.name}</td>
+                <td>${museum.visitorsLimit}</td>
+                <td>${museum.getWorkingDaysDisplayNames()}</td>
+                <td>${museum.opensAt} às ${museum.closesAt}</td>
+                <td>${museum.minutesBetweenVisits} minutos</td>
             </tr>
         </c:forEach>
     </table>

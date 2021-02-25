@@ -13,14 +13,14 @@ public class UserDao extends DAO {
     private final String tableName = "users";
 
     public boolean add(User user) {
-        final String query = String.format("INSERT INTO %s (username, password, role_id, museum_id) values (?, ?, ?, ?)",
+        final String query = String.format("INSERT INTO %s (username, password, role_id, employee_id) values (?, ?, ?, ?)",
                 tableName);
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.setLong(3, user.getRole().getCode());
-            statement.setLong(4, user.getMuseum_id());
+            statement.setLong(4, user.getEmployeeId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -45,11 +45,11 @@ public class UserDao extends DAO {
         return false;
     }
 
-    public boolean remove(User user) {
+    public boolean remove(String username) {
         final String query = String.format("DELETE FROM %s WHERE username=?", tableName);
 
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
-            statement.setString(1, user.getUsername());
+            statement.setString(1, username);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,17 +67,17 @@ public class UserDao extends DAO {
             statement.setString(2, pass);
             var rs = statement.executeQuery();
 
-            if(rs.next()) {
+            if (rs.next()) {
                 user = new User();
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                user.setMuseum_id(rs.getLong("museum_id"));
+                user.setEmployeeId(rs.getLong("employee_id"));
                 user.setRole(User.Role.from(rs.getInt("role_id")));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            user =null;
+            user = null;
         }
 
         return user;
@@ -92,20 +92,41 @@ public class UserDao extends DAO {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                User user = new User();
-
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
-                user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                user.setMuseum_id(rs.getLong("museum_id"));
-                user.setRole(User.Role.from(rs.getInt("role_id")));
-
-                users.add(user);
+                users.add(extractUserData(rs));
             }
 
         } catch (SQLException ignored) {
         }
 
         return users;
+    }
+
+    public User fetchByEmployee(Long employeeId) {
+        final String query = String.format("SELECT * FROM %s WHERE employee_id =?", tableName);
+
+        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+            statement.setLong(1, employeeId);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return extractUserData(rs);
+            }
+
+        } catch (SQLException ignored) {
+        }
+
+        return null;
+    }
+
+    private User extractUserData(ResultSet rs) throws SQLException {
+        User user = new User();
+
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        user.setEmployeeId(rs.getLong("employee_id"));
+        user.setRole(User.Role.from(rs.getInt("role_id")));
+
+        return user;
     }
 }

@@ -46,7 +46,6 @@
     </table>
 
     <c:if test="${not empty schedule}">
-
         <div class="pt-3">
             <h3>Vistantes</h3>
             <hr class="mb-4"/>
@@ -101,13 +100,13 @@
                 </tr>
                 <c:forEach var="visitor" items="${visitors}">
                     <tr>
-                        <th>
+                        <td>
                             <form action="scheduler" method="post">
                                 <input type="hidden" name="logic" value="RemoveVisitorLogic"/>
                                 <input type="hidden" name="cpf" value="${visitor.cpf}"/>
                                 <button class="btn btn-outline-danger" type="submit">Remover</button>
                             </form>
-                        </th>
+                        </td>
                         <td>${visitor.cpf}</td>
                         <td>${visitor.name}</td>
                         <td>${visitor.ticketType.description}</td>

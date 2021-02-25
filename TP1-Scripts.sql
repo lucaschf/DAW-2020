@@ -147,12 +147,22 @@ CREATE TABLE role(
 	is_admin BOOLEAN NOT NULL DEFAULT false
 );
 
+DROP TABLE users;
+DROP TABLE employee;
 CREATE TABLE users(
 	username VARCHAR(30) PRIMARY KEY,
 	password VARCHAR(50) NOT NULL,
 	role_id INTEGER REFERENCES role(id) ON DELETE CASCADE,
-	museum_id INTEGER NULL REFERENCES museum(id),
+	employee_id INTEGER NULL REFERENCES employee(id) ON DELETE CASCADE,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE employee(
+	id SERIAL PRIMARY KEY,
+	cpf CHARACTER VARYING(11) NOT NULL,
+	name CHARACTER VARYING(100) NOT NULL,
+	museum_id INTEGER NULL REFERENCES museum(id) ON DELETE CASCADE,
+	UNIQUE (museum_id, cpf)
 );
 
 CREATE OR REPLACE FUNCTION check_user_data_before_insert() RETURNS TRIGGER AS $$
@@ -160,8 +170,8 @@ CREATE OR REPLACE FUNCTION check_user_data_before_insert() RETURNS TRIGGER AS $$
 		is_admin BOOLEAN;
 	BEGIN 
 		SELECT role.is_admin FROM role WHERE role.id = NEW.role_id INTO is_admin;
-		if NOT is_admin AND NEW.museum_id IS NULL THEN 
-			RAISE EXCEPTION 'Invalid museum_id';
+		if NOT is_admin AND NEW.employee_id IS NULL THEN 
+			RAISE EXCEPTION 'Invalid employee_id';
 			RETURN NULL;
 		ELSE 
 			RETURN NEW;
@@ -177,7 +187,7 @@ INSERT INTO role(name, is_admin) VALUES
 		('EMPLOYEE', false);
 		
 INSERT INTO public.users(
-	username, password, role_id, museum_id)
+	username, password, role_id, employee_id)
 	VALUES ('admin', 'admin', 1, NULL);
 	
 DROP FUNCTION visitors_per_day;
@@ -233,15 +243,3 @@ INSERT INTO public.museum_working_days(
 		(2, 6),
 		(2, 7);
 		
-		
-SELECT 
-		schedule.id AS schedule_id,
-		schedule.schedule_date,
-		schedule.schedule_time,
-		cpf, 
-		name
-		FROM schedule 
-		INNER JOIN visitor ON visitor.schedule_id = schedule.id 
-		WHERE schedule.schedule_date = '2021-02-25' AND schedule.museum_id = 1
-	;
-
