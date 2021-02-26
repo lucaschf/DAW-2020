@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="ISO-8859-1" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
@@ -26,9 +25,9 @@
     <table class="table align-content-center table-striped" style="vertical-align: middle">
         <tr>
             <th>Museu</th>
-            <th>Visitantes simult‚neos</th>
+            <th>Visitantes simult√¢neos</th>
             <th>Funcionamento</th>
-            <th>HÛrario de visitas</th>
+            <th>H√≥rario de visitas</th>
             <th>Intervalo entre visitas</th>
         </tr>
 
@@ -37,7 +36,7 @@
                 <td>${museum.name}</td>
                 <td>${museum.visitorsLimit}</td>
                 <td>${museum.getWorkingDaysDisplayNames()}</td>
-                <td>${museum.opensAt} ‡s ${museum.closesAt}</td>
+                <td>${museum.opensAt} √†s ${museum.closesAt}</td>
                 <td>${museum.minutesBetweenVisits} minutos</td>
             </tr>
         </c:forEach>
@@ -49,7 +48,7 @@
     <%@include file="message.jsp" %>
 
     <form class="row g-3" action="scheduler" method="post">
-        <input type="hidden" name="logic" value="SelectMuseumLogic"/>
+        <input type="hidden" name="logic" value="SelectMuseum"/>
 
         <div class="col-md-3">
             <label for="choiceMuseum" class="form-label">Museu</label>
@@ -88,7 +87,7 @@
         </div>
 
         <div class="col-md-3">
-            <label for="inputTime" class="form-label">Hor·rio</label>
+            <label for="inputTime" class="form-label">Hor√°rio</label>
             <input type="time" name="time" class="form-control" id="inputTime" value="${schedule.hours}" required>
         </div>
 
@@ -98,7 +97,7 @@
                    value="${schedule.visitorsCount}" required>
         </div>
 
-        <h4>Termos e condiÁıes</h4>
+        <h4>Termos e condi√ß√µes</h4>
         <div class="terms">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris varius condimentum pellentesque. Nam laoreet
             nulla ex, sed ullamcorper nisi vulputate eu. Integer euismod dolor sapien. Sed dictum condimentum lacus sit

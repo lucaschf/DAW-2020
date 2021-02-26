@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="ISO-8859-1" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="auth_as_admin.jsp"%>
 
@@ -17,7 +16,7 @@
 <jsp:useBean id="museumDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO"/>
 
 <div class="container pt-3">
-    <h2>Registro de funcion·rios</h2>
+    <h2>Registro de funcion√°rios</h2>
     <hr class="mb-5"/>
 </div>
 
@@ -62,7 +61,7 @@
         </div>
 
         <div class="col-12 pb-3">
-            <button class="btn btn-outline-custom" type="submit">Adicionar funcion·rio</button>
+            <button class="btn btn-outline-custom" type="submit">Adicionar funcion√°rio</button>
         </div>
     </form>
 </div>

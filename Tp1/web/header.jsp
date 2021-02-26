@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Museum Schedule</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
@@ -11,10 +10,10 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
     <div class="container-fluid">
         <img src="images/logo_.png" alt="" class="logo">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="index.jsp">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -27,13 +26,17 @@
                         Agendamentos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-                        <li><a class="dropdown-item" href="schedules_list.jsp">Consultar</a></li>
+
                         <li><a class="dropdown-item" href="schedule_museum_select.jsp">Novo Agendamento</a></li>
                         <li><a class="dropdown-item" href="search_schedule.jsp">Editar</a></li>
                     </ul>
                 </li>
                 <c:if test="${sessionScope.user != null}">
-                    <c:if test="${sessionScope.user.role.systemAdmin}">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="add_attraction.jsp">Adicionar atrações</a>
+                    </li>
+
+                    <c:if test="${sessionScope.user.systemAdmin}">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
@@ -63,7 +66,7 @@
                             Relatórios
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="reportDropdown">
-                            <li><a class="dropdown-item" href="employee_list.jsp">Visitantes por dia</a></li>
+                            <li><a class="dropdown-item" href="report_visitors_by_date_time.jsp">Visitantes por dia</a></li>
                             <li><a class="dropdown-item" href="employee_registration.jsp">Visitantes por data</a></li>
                         </ul>
                     </li>

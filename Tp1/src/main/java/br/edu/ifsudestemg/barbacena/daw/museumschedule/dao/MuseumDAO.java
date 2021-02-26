@@ -1,5 +1,6 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.dao;
 
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Employee;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Museum;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.MuseumAvailableHours;
 
@@ -106,5 +107,13 @@ public class MuseumDAO extends DAO {
         museum.setOpensAt(LocalTime.from(rs.getTime("opens_at").toLocalTime()));
 
         museum.setWorkingDays(fetchWorkingDays(museum.getId()));
+    }
+
+    public Museum fetchByEmployee(Long employeeId) {
+        try {
+            return new EmployeeDao().fetchById(employeeId).getMuseum();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

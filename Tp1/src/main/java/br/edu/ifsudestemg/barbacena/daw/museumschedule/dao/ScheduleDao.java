@@ -1,5 +1,6 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.dao;
 
+import br.com.caelum.stella.tinytype.CPF;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 
 import java.sql.*;
@@ -13,6 +14,27 @@ public class ScheduleDao extends DAO {
     private final String tableName = "schedule";
 
     private final VisitorsDao visitorsDao = new VisitorsDao();
+
+    public boolean isEmailAlreadyBooked(String email, LocalDate date, LocalTime time) {
+        String query = "{call is_email_booked(?, ?, ?)}";
+
+        try (CallableStatement statement = getConnection().prepareCall(query)) {
+            statement.setString(1, email);
+            statement.setDate(2, Date.valueOf(date));
+            statement.setTime(3, Time.valueOf(time));
+
+            var rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
 
     public boolean add(Schedule schedule) {
         final String query = String.format("INSERT INTO %s(scheduler_email, schedule_date, schedule_time," +
@@ -56,15 +78,6 @@ public class ScheduleDao extends DAO {
 
     public List<Schedule> fetchAll() {
         final String query = String.format("SELECT * FROM %s", tableName);
-
-        return fetchSchedules(query);
-    }
-
-    public List<Schedule> fetchByMuseumPerDay(long museumId, LocalDate date) {
-        final String query = String.format("SELECT * FROM %s WHERE museum_id = %d AND schedule_date = '%s'",
-                tableName,
-                museumId,
-                Date.valueOf(date));
 
         return fetchSchedules(query);
     }

@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="ISO-8859-1" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="auth_as_admin.jsp"%>
 
@@ -17,7 +16,7 @@
 <jsp:useBean id="museumDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO"/>
 
 <div class="container pt-3">
-    <h2>Registro de usuário</h2>
+    <h2>Registro de usuÃ¡rio</h2>
     <hr class="mb-5"/>
 </div>
 
@@ -30,7 +29,7 @@
             <td>${employee.cpf}</td>
         </tr>
         <tr>
-            <td><b>Nome do funcionário</b></td>
+            <td><b>Nome do funcionÃ¡rio</b></td>
             <td>${employee.name}</td>
         </tr>
         <tr>
@@ -50,7 +49,7 @@
         <input type="hidden" name="logic" value="RegisterUserForEmployee"/>
 
         <div class="col-md-3">
-            <label for="inputUserName" class="form-label">Usuário</label>
+            <label for="inputUserName" class="form-label">UsuÃ¡rio</label>
             <input type="text" name="username" value="${requestScope.username}" class="form-control" id="inputUserName" required>
         </div>
 
@@ -65,7 +64,7 @@
         </div>
 
         <div class="col-12 pb-3">
-            <button class="btn btn-outline-custom" type="submit">Adicionar usuário</button>
+            <button class="btn btn-outline-custom" type="submit">Adicionar usuÃ¡rio</button>
         </div>
     </form>
 </div>

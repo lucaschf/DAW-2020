@@ -2,7 +2,6 @@ package br.edu.ifsudestemg.barbacena.daw.museumschedule.dao;
 
 import br.com.caelum.stella.tinytype.CPF;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Employee;
-import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,6 +62,30 @@ public class EmployeeDao extends DAO {
                 cpf.getNumero(),
                 museum_id);
 
+        return extractEmployee(query);
+    }
+
+    public boolean remove(long employeeId) {
+        final String query = String.format("DELETE FROM %s WHERE id= %d", tableName, employeeId);
+
+        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+            return statement.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Employee fetchById(Long employeeId) {
+
+        final String query = String.format("SELECT * FROM %s WHERE id =%d",
+                tableName,
+                employeeId);
+
+        return extractEmployee(query);
+    }
+
+    private Employee extractEmployee(String query) {
         try (PreparedStatement statement = getConnection().prepareStatement(query)) {
             ResultSet rs = statement.executeQuery();
 
@@ -78,21 +101,10 @@ public class EmployeeDao extends DAO {
 
                 return employee;
             }
-        } catch (SQLException ignored) {
-            ignored.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return null;
-    }
-
-    public boolean remove(long employeeId) {
-        final String query = String.format("DELETE FROM %s WHERE id= %d", tableName, employeeId);
-
-        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
-            return statement.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 }

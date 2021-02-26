@@ -27,7 +27,7 @@ public class Login implements Logic {
             request.setAttribute("username", username);
         }else {
             HttpSession session = request.getSession();
-            session.setMaxInactiveInterval(2 * 60);
+            session.setMaxInactiveInterval(15 * 60);
             session.setAttribute("status", true);
             session.setAttribute("user", user.withoutPassword());
         }

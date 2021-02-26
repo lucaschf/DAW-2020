@@ -8,6 +8,7 @@ public class Visitor {
     private CPF cpf;
     private String name;
     private TicketType ticketType;
+    private boolean attended;
 
     public Long getScheduleID() {
         return scheduleID;
@@ -39,5 +40,13 @@ public class Visitor {
 
     public void setTicketType(TicketType ticketType) {
         this.ticketType = ticketType;
+    }
+
+    public boolean isAttended() {
+        return attended;
+    }
+
+    public void setAttended(boolean attended) {
+        this.attended = attended;
     }
 }

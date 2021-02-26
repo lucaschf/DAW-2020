@@ -36,11 +36,32 @@ CREATE TABLE visitor(
 	cpf CHARACTER VARYING(11) NOT NULL,
 	name CHARACTER VARYING(100) NOT NULL,
 	ticket_type INTEGER NOT NULL,
+	attended BOOLEAN NOT NULL DEFAULT FALSE,
 	
 	PRIMARY KEY (schedule_id, cpf)
 );
 
-ALTER TABLE visitor ADD COLUMN attended BOOLEAN NOT NULL DEFAULT FALSE;	
+CREATE TABLE employee(
+	id SERIAL PRIMARY KEY,
+	cpf CHARACTER VARYING(11) NOT NULL,
+	name CHARACTER VARYING(100) NOT NULL,
+	museum_id INTEGER NULL REFERENCES museum(id) ON DELETE CASCADE,
+	UNIQUE (museum_id, cpf)
+);
+
+CREATE TABLE role(
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(50) NOT NULL UNIQUE,
+	is_admin BOOLEAN NOT NULL DEFAULT false
+);
+
+CREATE TABLE users(
+	username VARCHAR(30) PRIMARY KEY,
+	password VARCHAR(50) NOT NULL,
+	role_id INTEGER REFERENCES role(id) ON DELETE CASCADE,
+	employee_id INTEGER NULL REFERENCES employee(id) ON DELETE CASCADE,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
 
 CREATE OR REPLACE FUNCTION booked_visitors(museumId BIGINT, _date DATE) RETURNS TABLE(
 	visitors INT,
@@ -113,15 +134,6 @@ CREATE OR REPLACE FUNCTION visiting_hours(museumId BIGINT, _date DATE) RETURNS T
 		END LOOP;
 	END;
 $$ LANGUAGE plpgsql;
-
-select * from visiting_hours(1, '2021-02-21');
-
-INSERT INTO public.museum(
-	name, opens_at, closes_at, visitors_at_time, minutes_between_visits)
-	VALUES 
-		('Museu Municipal de Barbacena', '08:00', '18:00', 5, 60),
-		('Museu da Loucura','09:00', '18:00', 10, 60)
-	;
 	
 
 CREATE OR REPLACE FUNCTION update_schedule_visitors_count() RETURNS TRIGGER AS $$
@@ -137,33 +149,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER update_vistors_count AFTER DELETE ON visitor
 	FOR EACH ROW EXECUTE FUNCTION update_schedule_visitors_count();
 
-
-DROP TABLE users;
-DROP TABLE role;
-
-CREATE TABLE role(
-	id SERIAL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL UNIQUE,
-	is_admin BOOLEAN NOT NULL DEFAULT false
-);
-
-DROP TABLE users;
-DROP TABLE employee;
-CREATE TABLE users(
-	username VARCHAR(30) PRIMARY KEY,
-	password VARCHAR(50) NOT NULL,
-	role_id INTEGER REFERENCES role(id) ON DELETE CASCADE,
-	employee_id INTEGER NULL REFERENCES employee(id) ON DELETE CASCADE,
-	created_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE employee(
-	id SERIAL PRIMARY KEY,
-	cpf CHARACTER VARYING(11) NOT NULL,
-	name CHARACTER VARYING(100) NOT NULL,
-	museum_id INTEGER NULL REFERENCES museum(id) ON DELETE CASCADE,
-	UNIQUE (museum_id, cpf)
-);
 
 CREATE OR REPLACE FUNCTION check_user_data_before_insert() RETURNS TRIGGER AS $$
 	DECLARE
@@ -182,16 +167,9 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_user_role_before_insert BEFORE INSERT ON users
 	FOR EACH ROW EXECUTE FUNCTION check_user_data_before_insert();
 
-INSERT INTO role(name, is_admin) VALUES
-		('ADMINISTRATOR', true),
-		('EMPLOYEE', false);
-		
-INSERT INTO public.users(
-	username, password, role_id, employee_id)
-	VALUES ('admin', 'admin', 1, NULL);
 	
-DROP FUNCTION visitors_per_day;
-CREATE OR REPLACE FUNCTION visitors_per_day(visit_date DATE, museumId INTEGER) RETURNS TABLE(
+DROP FUNCTION visitors_per_day_time_by_museum;
+CREATE OR REPLACE FUNCTION visitors_per_day_time_by_museum(visit_date DATE, visit_time TIME, museumId BIGINT) RETURNS TABLE(
 	schedule_id INTEGER,
 	cpf CHARACTER VARYING(11),
 	name CHARACTER VARYING(100),
@@ -218,13 +196,20 @@ CREATE OR REPLACE FUNCTION visitors_per_day(visit_date DATE, museumId INTEGER) R
 		FROM schedule 
 		INNER JOIN visitor ON visitor.schedule_id = schedule.id
 		INNER JOIN museum ON museum.id = schedule.museum_id
-		WHERE schedule.schedule_date = visit_date AND schedule.museum_id = museumId
+		WHERE schedule.schedule_date = visit_date AND schedule.schedule_time = visit_time AND schedule.museum_id = museumId
 		ORDER BY schedule.schedule_time
 		;
 	END;
 $$ LANGUAGE PLPGSQL;
 
-SELECT * FROM visitors_per_day('2021-02-25', 1)
+SELECT * FROM visitors_per_day_time_by_museum('2021-02-27' , '11:00:00', 1)
+
+INSERT INTO public.museum(
+	name, opens_at, closes_at, visitors_at_time, minutes_between_visits)
+	VALUES 
+		('Museu Municipal de Barbacena', '08:00', '18:00', 5, 60),
+		('Museu da Loucura','09:00', '18:00', 10, 60)
+	;
 
 INSERT INTO public.museum_working_days(
 	museum_id, day_of_week)
@@ -243,3 +228,12 @@ INSERT INTO public.museum_working_days(
 		(2, 6),
 		(2, 7);
 		
+
+INSERT INTO role(name, is_admin) VALUES
+		('ADMINISTRATOR', true),
+		('EMPLOYEE', false);
+		
+INSERT INTO public.users(
+	username, password, role_id, employee_id)
+	VALUES ('admin', 'admin', 1, NULL);
+

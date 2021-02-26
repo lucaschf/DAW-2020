@@ -1,6 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="ISO-8859-1" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="auth_as_admin.jsp"%>
 
 <!DOCTYPE html>
 <html>
@@ -16,7 +16,6 @@
 <c:import url="header.jsp"/>
 <jsp:useBean id="scheculeDao" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.ScheduleDao"/>
 <jsp:useBean id="formaterUtil" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.util.FormatterUtils"/>
-<%@include file="auth_as_admin.jsp" %>
 
 <div class="container pt-3">
     <h2>Agendamentos</h2>
@@ -25,34 +24,36 @@
 
 <div class="container">
     <c:set var="schedules" value="${scheculeDao.fetchAll()}"/>
+
     <c:if test="${not empty schedules}">
         <table class="table align-content-center table-striped" style="vertical-align: middle">
             <tr>
-                <th>AÁ„o</th>
+                <th>A√ß√£o</th>
                 <th>Codigo de confirmacao</th>
                 <th>Email do agendador</th>
                 <th>Data</th>
-                <th>Hor·rio</th>
+                <th>Hor√°rio</th>
                 <th>Data de aceite aos termos</th>
                 <th>Museu</th>
                 <th>Visitantes</th>
             </tr>
             <c:forEach var="schedule" items="${schedules}">
                 <tr>
-                    <th>
+                    <td>
                         <div class="d-flex">
-                            <form class="mt-auto mb-auto" action="scheduler" method="post">
-                                <button class="btn btn-danger" type="submit">Cancelar</button>
-                                <input type="hidden" name="code" value="${schedule.confirmationCode}"/>
-                                <input type="hidden" name="logic" value="CancelScheduleLogic"/>
-                            </form>
                             <form style="margin-left: 10px" class="mt-auto mb-auto" action="scheduler" method="post">
-                                <button class="btn btn-outline-custom" type="submit">Editar</button>
-                                <input type="hidden" name="code" value="${schedule.confirmationCode}"/>
-                                <input type="hidden" name="logic" value="EditScheduleLogic"/>
+                                <c:if test="${!schedule.allVisitorsCheckedIn}">
+                                    <button class="btn btn-outline-custom" type="submit">Editar</button>
+                                </c:if>
+                                <c:if test="${schedule.allVisitorsCheckedIn}">
+                                    <button class="btn btn-outline-primary" type="submit">Visualizar</button>
+                                </c:if>
+                                <input type="hidden" name="email" value="${schedule.schedulerEmail}"/>
+                                <input type="hidden" name="confirmationCode" value="${schedule.confirmationCode}"/>
+                                <input type="hidden" name="logic" value="SearchSchedule"/>
                             </form>
                         </div>
-                    </th>
+                    </td>
                     <td>${schedule.confirmationCode}</td>
                     <td>${schedule.schedulerEmail}</td>
                     <td>${schedule.date.format(formaterUtil.brazilianDateFormatter)}</td>

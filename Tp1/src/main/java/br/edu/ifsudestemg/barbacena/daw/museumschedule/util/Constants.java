@@ -18,7 +18,9 @@ public interface Constants {
     String SCHEDULE = "agendamento";
     String YOU_CANCELLED = "Você cancelou um ";
     String VISITOR_REMOVED = "Visitante removido com sucesso";
+    String VISITOR_CHECKED_IN = "Visitante confirmado com sucesso";
     String FAIL_TO_REMOVE_VISITOR = "Falha ao remover visitante";
+    String FAIL_TO_CHECK_IN = "Falha ao confirmar visitante";
     String YOUR_SCHEDULE_IS_CONFIRMED_FOR  = "O seu agendamento foi confirmado para";
     String YOUR_SCHEDULE_IS_UPDATED  = "Novas alterações no agendamento de";
     String YOUR_SCHEDULE_IS_CANCELLED  = "Um cancelamento foi realizado no agendamento do dia";
@@ -35,4 +37,7 @@ public interface Constants {
     String FAIL_TO_REMOVE_USER = "Falha ao remover usuário";
     String USER_ALREADY_REGISTERED_FOR_THIS_EMPLOYEE = "Já existe um usuário registrado para este funcionário";
     String PASSWORDS_DOESNT_MATCH = "As senhas nao coincidem";
+    String FAILED_TO_SCHEDULE = "Falha ao realizar agendamento. Verifique se não há outros agendamentos para este email, dia e horarios.";
+    String ATTRACTION_SUCCESSFUL_INSERTED = "Atração inserida com sucesso";
+    String FAIL_TO_ADD_ATTRACTION = "Falha ao inserir atração";
 }

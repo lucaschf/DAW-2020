@@ -7,12 +7,12 @@ import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Visitor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class RemoveVisitorLogic implements Logic {
+public class RemoveVisitor implements Logic {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         final String scheduleAttr = "schedule";
-        String sourcePage = "/schedule_museum_add_visitors.jsp";
+        String sourcePage = "/schedule_add_visitors_and_confirm.jsp";
 
         Schedule schedule = (Schedule) request.getSession().getAttribute(scheduleAttr);
         request.getSession().removeAttribute(scheduleAttr);

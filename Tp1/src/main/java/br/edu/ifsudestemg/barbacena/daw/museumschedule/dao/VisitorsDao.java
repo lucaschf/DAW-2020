@@ -1,18 +1,40 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.dao;
 
 import br.com.caelum.stella.tinytype.CPF;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.TicketType;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Visitor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VisitorsDao extends DAO {
 
     private final String tableName = "visitor";
+
+    public boolean isAlreadyBooked(CPF cpf, LocalDate date, LocalTime time) {
+        String query = "{call is_cpf_booked(?, ?, ?)}";
+
+        try (CallableStatement statement = getConnection().prepareCall(query)) {
+            statement.setString(1, cpf.getNumero());
+            statement.setDate(2, Date.valueOf(date));
+            statement.setTime(3, Time.valueOf(time));
+
+            var rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
 
     public boolean add(Visitor visitor) {
         final String query = String.format(
@@ -48,6 +70,7 @@ public class VisitorsDao extends DAO {
                 visitor.setName(rs.getString("name"));
                 visitor.setScheduleID(rs.getLong("schedule_id"));
                 visitor.setTicketType(TicketType.from(rs.getInt("ticket_type")));
+                visitor.setAttended(rs.getBoolean("attended"));
 
                 visitors.add(visitor);
             }
@@ -62,6 +85,33 @@ public class VisitorsDao extends DAO {
                 tableName,
                 visitor.getScheduleID(),
                 visitor.getCpf().getNumero());
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ignored) {
+        }
+
+        return false;
+    }
+
+    public boolean checkin(Visitor visitor) {
+        String sql = String.format("UPDATE %s SET attended = true WHERE schedule_id = %d AND cpf LIKE '%s';",
+                tableName,
+                visitor.getScheduleID(),
+                visitor.getCpf().getNumero());
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ignored) {
+        }
+
+        return false;
+    }
+
+    public boolean checkinAll(Schedule schedule) {
+        String sql = String.format("UPDATE %s SET attended = true WHERE schedule_id = %d;",
+                tableName,
+                schedule.getId());
 
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             return stmt.executeUpdate() > 0;

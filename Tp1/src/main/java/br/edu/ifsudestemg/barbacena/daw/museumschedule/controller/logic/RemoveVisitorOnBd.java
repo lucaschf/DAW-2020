@@ -16,7 +16,7 @@ import static br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message.Mess
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.*;
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.ScheduleHtmlReceiptGenerator.ReceiptType.UPDATE;
 
-public class RemoveVisitorOnBdLogic implements Logic {
+public class RemoveVisitorOnBd implements Logic {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -41,6 +41,6 @@ public class RemoveVisitorOnBdLogic implements Logic {
             request.setAttribute(MESSAGE_PARAM, new Message(FAIL_TO_REMOVE_VISITOR));
 
         request.setAttribute(scheduleAttr, schedule);
-        request.getRequestDispatcher("schedule_cancel.jsp").forward(request, response);
+        request.getRequestDispatcher("schedule_edit.jsp").forward(request, response);
     }
 }

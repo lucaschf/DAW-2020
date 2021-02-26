@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.NO_SCHEDULE_FOUND;
 
-public class SearchScheduleForEditLogic implements Logic {
+public class SearchSchedule implements Logic {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String sourcePage = "/search_schedule.jsp";
-        String nextPage = "/schedule_cancel.jsp";
+        String nextPage = "/schedule_edit.jsp";
 
         var email = request.getParameter("email");
         var confirmationCode = request.getParameter("confirmationCode");

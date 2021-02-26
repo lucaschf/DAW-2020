@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class Schedule {
     private long id;
-    private String confirmationCode;
+    private String confirmationCode = "";
     private String schedulerEmail;
 
     private LocalDate date;
@@ -106,6 +106,10 @@ public class Schedule {
 
     public boolean visitorAlreadyBooked(Visitor visitor) {
         return visitors.stream().anyMatch(v -> visitor.getCpf().equals(v.getCpf()));
+    }
+
+    public boolean isAllVisitorsCheckedIn(){
+        return visitors.stream().allMatch(Visitor::isAttended);
     }
 
     @Override

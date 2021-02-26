@@ -14,7 +14,7 @@ import static br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message.Mess
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.FAIL_TO_CANCEL_SCHEDULE;
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.SCHEDULE_CANCELLATION;
 
-public class CancelScheduleLogic implements Logic {
+public class CancelSchedule implements Logic {
 
 
     @Override
@@ -35,6 +35,6 @@ public class CancelScheduleLogic implements Logic {
 
         request.setAttribute(MESSAGE_PARAM, new Message(FAIL_TO_CANCEL_SCHEDULE));
         request.setAttribute(scheduleAttr, schedule);
-        request.getRequestDispatcher("schedule_cancel.jsp").forward(request, response);
+        request.getRequestDispatcher("schedule_edit.jsp").forward(request, response);
     }
 }

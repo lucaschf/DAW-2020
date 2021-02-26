@@ -1,6 +1,7 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.MuseumDAO;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.ScheduleDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 
@@ -12,7 +13,7 @@ import java.time.LocalTime;
 
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.*;
 
-public class SelectMuseumLogic implements Logic {
+public class SelectMuseum implements Logic {
 
     private final MuseumDAO dao = new MuseumDAO();
 
@@ -74,11 +75,16 @@ public class SelectMuseumLogic implements Logic {
             return sourcePage;
         }
 
+        if(new ScheduleDao().isEmailAlreadyBooked(schedule.getSchedulerEmail(), schedule.getDate(), schedule.getHours())){
+            request.setAttribute(MESSAGE_PARAM, new Message("Ja existe um agendamento para este email no horario informado"));
+            return sourcePage;
+        }
+
         if (schedule.getTermsAcceptanceDate() == null) {
             request.setAttribute(MESSAGE_PARAM, new Message(YOU_MUST_ACCEPT_THE_TERMS));
             return sourcePage;
         }
 
-        return "/schedule_museum_add_visitors.jsp";
+        return "/schedule_add_visitors_and_confirm.jsp";
     }
 }

@@ -4,13 +4,38 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-    <error-page>
-        <exception-type>java.lang.Exception</exception-type>
-        <location>/server-error.jsp</location>
-    </error-page>
+    <!--CharsetFilter start-->
+
+<!--    <filter>-->
+<!--        <filter-name>CharsetFilter</filter-name>-->
+<!--        <filter-class>br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.CharsetFilter</filter-class>-->
+<!--        <init-param>-->
+<!--            <param-name>requestEncoding</param-name>-->
+<!--            <param-value>UTF-8</param-value>-->
+<!--        </init-param>-->
+<!--    </filter>-->
+
+<!--    <filter-mapping>-->
+<!--        <filter-name>CharsetFilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
+
+<!--    <jsp-config>-->
+<!--        <jsp-property-group>-->
+<!--            <url-pattern>*.jsp</url-pattern>-->
+<!--            <page-encoding>UTF-8</page-encoding>-->
+<!--        </jsp-property-group>-->
+<!--    </jsp-config>-->
+
+    <!--    <error-page>-->
+    <!--        <exception-type>java.lang.Exception</exception-type>-->
+    <!--        <location>/server-error.jsp</location>-->
+    <!--    </error-page>-->
 
     <error-page>
         <error-code>404</error-code>
         <location>/error-404.jsp</location>
     </error-page>
+
+
 </web-app>

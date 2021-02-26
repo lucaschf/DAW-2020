@@ -1,6 +1,7 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
 import br.com.caelum.stella.tinytype.CPF;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.VisitorsDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.TicketType;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.FAIL_TO_ADD_VISITOR;
 import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.INVALID_CPF;
 
-public class AddVisitorLogic implements Logic {
+public class AddVisitor implements Logic {
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -32,20 +33,35 @@ public class AddVisitorLogic implements Logic {
     }
 
     private String processData(HttpServletRequest request, Schedule schedule, Visitor visitor) {
-        String url = "/schedule_museum_add_visitors.jsp";
-        String sourcePage = "/schedule_museum_add_visitors.jsp";
+        String url = "/schedule_add_visitors_and_confirm.jsp";
+        String sourcePage = "/schedule_add_visitors_and_confirm.jsp";
 
 
         if (!visitor.getCpf().isValido()) {
-            request.setAttribute(MESSAGE_PARAM, new Message("", INVALID_CPF));
+            request.setAttribute(MESSAGE_PARAM, new Message(INVALID_CPF));
+            putBackData(request, visitor);
             return sourcePage;
         }
 
-        if(!schedule.addVisitor(visitor)){
-            request.setAttribute(MESSAGE_PARAM, new Message("", FAIL_TO_ADD_VISITOR));
+        if (new VisitorsDao().isAlreadyBooked(visitor.getCpf(), schedule.getDate(), schedule.getHours())) {
+            request.setAttribute(MESSAGE_PARAM, new Message("Ja existe um agendamento para este vistante no horario informado"));
+            putBackData(request, visitor);
+            return sourcePage;
+        }
+
+        if (!schedule.addVisitor(visitor)) {
+            request.setAttribute(MESSAGE_PARAM, new Message(FAIL_TO_ADD_VISITOR));
+            putBackData(request, visitor);
             return sourcePage;
         }
 
         return url;
     }
+
+    private void putBackData(HttpServletRequest request, Visitor visitor){
+        request.setAttribute("cpf", visitor.getCpf().getNumero());
+        request.setAttribute("visitorName", visitor.getName());
+        request.setAttribute("ticket", visitor.getTicketType().getCode());
+    }
+
 }
