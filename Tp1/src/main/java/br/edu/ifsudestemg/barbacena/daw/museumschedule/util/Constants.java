@@ -8,6 +8,7 @@ public interface Constants {
     String INVALID_CPF = "Cpf Inválido.";
     String INVALID_TIME = "Horário Inválido.";
     String FAIL_TO_ADD_VISITOR = "Falha ao adicionar visitante";
+    String THERE_IS_ANOTHER_SCHEDULE_AT_THIS_TIME = "Ja existe um agendamento para este vistante no horario informado";
     String YOU_MUST_ACCEPT_THE_TERMS = "Você deve aceitar os termos";
     String NO_SCHEDULE_FOUND = "Agendamento não encontrado";
     String SCHEDULE_CONFIRMED = "Agendamento Confirmado!";
@@ -40,4 +41,6 @@ public interface Constants {
     String FAILED_TO_SCHEDULE = "Falha ao realizar agendamento. Verifique se não há outros agendamentos para este email, dia e horarios.";
     String ATTRACTION_SUCCESSFUL_INSERTED = "Atração inserida com sucesso";
     String FAIL_TO_ADD_ATTRACTION = "Falha ao inserir atração";
+    String VISITORS_OF_SCHEDULE = "Visitantes do agendamento";
+    String SUCCESSFUL_CONFIRMED = "confirmados com sucesso";
 }

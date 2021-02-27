@@ -1,6 +1,7 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
 import br.com.caelum.stella.tinytype.CPF;
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.PagesNames;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.ScheduleDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.VisitorsDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
@@ -19,7 +20,7 @@ import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.ScheduleHtmlR
 public class VisitorCheckin implements Logic {
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Visitor visitor = new Visitor();
 
         final String scheduleAttr = "schedule";
@@ -37,6 +38,6 @@ public class VisitorCheckin implements Logic {
             request.setAttribute(MESSAGE_PARAM, new Message(FAIL_TO_CHECK_IN));
 
         request.setAttribute(scheduleAttr, schedule);
-        request.getRequestDispatcher("schedule_edit.jsp").forward(request, response);
+        return PagesNames.SCHEDULE_EDIT;
     }
 }

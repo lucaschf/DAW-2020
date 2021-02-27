@@ -20,7 +20,7 @@ public class UserDao extends DAO {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getPassword());
             statement.setLong(3, user.getRole().getCode());
-            statement.setLong(4, user.getEmployeeId());
+            statement.setLong(4, user.getEmployee().getId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -68,12 +68,7 @@ public class UserDao extends DAO {
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                user = new User();
-                user.setUsername(rs.getString("username"));
-                user.setPassword(rs.getString("password"));
-                user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                user.setEmployeeId(rs.getLong("employee_id"));
-                user.setRole(User.Role.from(rs.getInt("role_id")));
+                user = extractUserData(rs);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,7 +119,7 @@ public class UserDao extends DAO {
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password"));
         user.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        user.setEmployeeId(rs.getLong("employee_id"));
+        user.setEmployee(new EmployeeDao().fetchById(rs.getLong("employee_id")));
         user.setRole(User.Role.from(rs.getInt("role_id")));
 
         return user;

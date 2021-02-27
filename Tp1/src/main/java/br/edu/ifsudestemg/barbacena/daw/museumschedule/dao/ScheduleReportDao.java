@@ -26,29 +26,55 @@ public class ScheduleReportDao extends DAO {
             else
                 statement.setNull(3, Types.BIGINT);
 
-            var rs = statement.executeQuery();
+            fetchEntries(data, statement);
 
-            while (rs.next()) {
-                ScheduleReport entry = new ScheduleReport();
-                entry.setId(rs.getInt("schedule_id"));
-                entry.setConfirmationCode(rs.getString("schedule_number"));
-                entry.setSchedulerEmail(rs.getString("scheduler_email"));
-                entry.setDate(rs.getDate("schedule_date").toLocalDate());
-                entry.setHours(rs.getTime("schedule_time").toLocalTime());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-                entry.setMuseumName(rs.getString("museum_name"));
+        return data;
+    }
 
-                Visitor visitor = new Visitor();
+    private void fetchEntries(ArrayList<ScheduleReport> data, CallableStatement statement) throws SQLException {
+        var rs = statement.executeQuery();
 
-                visitor.setAttended(rs.getBoolean("attended"));
-                visitor.setTicketType(TicketType.from(rs.getInt("ticket_type")));
-                visitor.setCpf(new CPF(rs.getString("cpf")));
-                visitor.setName(rs.getString("name"));
+        while (rs.next()) {
+            ScheduleReport entry = new ScheduleReport();
+            entry.setId(rs.getInt("schedule_id"));
+            entry.setConfirmationCode(rs.getString("schedule_number"));
+            entry.setSchedulerEmail(rs.getString("scheduler_email"));
+            entry.setDate(rs.getDate("schedule_date").toLocalDate());
+            entry.setHours(rs.getTime("schedule_time").toLocalTime());
 
-                entry.setVisitor(visitor);
+            entry.setMuseumName(rs.getString("museum_name"));
 
-                data.add(entry);
-            }
+            Visitor visitor = new Visitor();
+
+            visitor.setAttended(rs.getBoolean("attended"));
+            visitor.setTicketType(TicketType.from(rs.getInt("ticket_type")));
+            visitor.setCpf(new CPF(rs.getString("cpf")));
+            visitor.setName(rs.getString("name"));
+
+            entry.setVisitor(visitor);
+
+            data.add(entry);
+        }
+    }
+
+    public List<ScheduleReport> reportOfAttendedVisitorsByMuseumInDay(LocalDate date, Long museum_id) {
+        final String query = "{call visitors_who_attended_per_day (?, ?)}";
+
+        var data = new ArrayList<ScheduleReport>();
+
+        try (CallableStatement statement = getConnection().prepareCall(query)) {
+            statement.setDate(1, Date.valueOf(date));
+
+            if (museum_id != null)
+                statement.setLong(2, museum_id);
+            else
+                statement.setNull(2, Types.BIGINT);
+
+            fetchEntries(data, statement);
 
         } catch (SQLException e) {
             e.printStackTrace();

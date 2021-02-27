@@ -38,6 +38,10 @@ public class Message {
         return this;
     }
 
+    public boolean isSuccess(){
+        return type == MessageType.SUCCESS;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

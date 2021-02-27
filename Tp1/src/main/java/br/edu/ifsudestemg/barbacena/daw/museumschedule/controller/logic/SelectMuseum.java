@@ -18,11 +18,10 @@ public class SelectMuseum implements Logic {
     private final MuseumDAO dao = new MuseumDAO();
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         var schedule = getScheduleFromRequest(request);
 
-        request.getRequestDispatcher(processData(schedule, request))
-                .forward(request, response);
+        return processData(schedule, request);
     }
 
     private Schedule getScheduleFromRequest(HttpServletRequest request) {
@@ -75,7 +74,7 @@ public class SelectMuseum implements Logic {
             return sourcePage;
         }
 
-        if(new ScheduleDao().isEmailAlreadyBooked(schedule.getSchedulerEmail(), schedule.getDate(), schedule.getHours())){
+        if (new ScheduleDao().isEmailAlreadyBooked(schedule.getSchedulerEmail(), schedule.getDate(), schedule.getHours())) {
             request.setAttribute(MESSAGE_PARAM, new Message("Ja existe um agendamento para este email no horario informado"));
             return sourcePage;
         }

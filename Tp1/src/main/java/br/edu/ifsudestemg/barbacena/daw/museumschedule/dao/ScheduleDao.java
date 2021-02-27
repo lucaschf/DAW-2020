@@ -1,6 +1,5 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.dao;
 
-import br.com.caelum.stella.tinytype.CPF;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Schedule;
 
 import java.sql.*;
@@ -79,6 +78,12 @@ public class ScheduleDao extends DAO {
     public List<Schedule> fetchAll() {
         final String query = String.format("SELECT * FROM %s", tableName);
 
+        return fetchSchedules(query);
+    }
+
+    public List<Schedule> fetchAllByMuseum(long museumId)
+    {
+        final String query = String.format("SELECT * FROM %s WHERE museum_id= %d", tableName, museumId);
         return fetchSchedules(query);
     }
 

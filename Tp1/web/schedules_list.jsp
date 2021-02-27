@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@include file="auth_as_admin.jsp"%>
+<%@include file="auth.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -23,7 +23,13 @@
 </div>
 
 <div class="container">
-    <c:set var="schedules" value="${scheculeDao.fetchAll()}"/>
+    <c:if test="${sessionScope.user.systemAdmin}">
+        <c:set var="schedules" value="${scheculeDao.fetchAll()}"/>
+    </c:if>
+
+    <c:if test="${!sessionScope.user.systemAdmin}">
+        <c:set var="schedules" value="${scheculeDao.fetchAllByMuseum(sessionScope.user.employee.museum.id)}"/>
+    </c:if>
 
     <c:if test="${not empty schedules}">
         <table class="table align-content-center table-striped" style="vertical-align: middle">

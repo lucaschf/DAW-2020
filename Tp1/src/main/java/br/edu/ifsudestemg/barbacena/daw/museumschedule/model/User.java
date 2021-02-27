@@ -6,8 +6,9 @@ public class User implements Cloneable {
 
     private String username;
     private String password;
+    private String confirmationPassword;
     private LocalDateTime createdAt;
-    private Long employeeId;
+    private Employee employee;
     private Role role;
 
     public String getUsername() {
@@ -26,6 +27,14 @@ public class User implements Cloneable {
         this.password = password;
     }
 
+    public String getConfirmationPassword() {
+        return confirmationPassword;
+    }
+
+    public void setConfirmationPassword(String confirmationPassword) {
+        this.confirmationPassword = confirmationPassword;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -34,12 +43,12 @@ public class User implements Cloneable {
         this.createdAt = createdAt;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     public Role getRole() {
@@ -70,6 +79,10 @@ public class User implements Cloneable {
 
     public boolean isSystemAdmin(){
         return role.isSystemAdmin();
+    }
+
+    public boolean confirmationPasswordMatch(){
+        return password.equals(confirmationPassword);
     }
 
     public enum Role {

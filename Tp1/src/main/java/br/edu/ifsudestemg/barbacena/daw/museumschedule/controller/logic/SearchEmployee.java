@@ -15,7 +15,7 @@ public class SearchEmployee implements Logic {
     private final String museumId = "museum_id";
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         var cpf = request.getParameter(cpfParameter);
         long museumId = Long.parseLong(request.getParameter(this.museumId));
@@ -37,8 +37,9 @@ public class SearchEmployee implements Logic {
                 request.setAttribute("employee", employee);
         }
 
-        request.getRequestDispatcher(url).forward(request, response);
+        return url;
     }
+
 
     private void putBackData(HttpServletRequest request, String cpf, long museum_id) {
         request.setAttribute(cpfParameter, cpf);

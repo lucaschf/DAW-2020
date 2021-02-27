@@ -1,5 +1,6 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.PagesNames;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.EmployeeDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
 
@@ -12,14 +13,16 @@ import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.*;
 public class RemoveEmployee implements Logic {
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        var url = "employee_list.jsp";
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Message message;
 
         if (new EmployeeDao().remove(Long.parseLong(request.getParameter("employee_id")))) {
-            request.setAttribute(MESSAGE_PARAM, new Message(EMPLOYEE_SUCCESSFUL_REMOVED, SUCCESS));
+            message = new Message(EMPLOYEE_SUCCESSFUL_REMOVED, SUCCESS);
         } else
-            request.setAttribute(MESSAGE_PARAM, new Message(FAIL_TO_REMOVE_EMPLOYEE));
+            message = new Message(FAIL_TO_REMOVE_EMPLOYEE);
 
-        request.getRequestDispatcher(url).forward(request, response);
+        request.setAttribute(MESSAGE_PARAM, message);
+
+        return PagesNames.EMPLOYEE_LIST;
     }
 }

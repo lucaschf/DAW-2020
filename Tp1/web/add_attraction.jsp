@@ -23,16 +23,18 @@
     <form class="row g-3" action="scheduler" method="post">
         <input type="hidden" name="logic" value="AddAttraction"/>
 
-        <div class="col-md-3">
-            <label for="choiceMuseum" class="form-label">Museu</label>
-            <select class="form-select" name="museum_id" id="choiceMuseum" required>
-                <option disabled value="">Escolha...</option>
+        <c:if test="${sessionScope.user.systemAdmin}">
+            <div class="col-md-3">
+                <label for="choiceMuseum" class="form-label">Museu</label>
+                <select class="form-select" name="museum_id" id="choiceMuseum" required>
+                    <option disabled value="">Escolha...</option>
 
-                <c:forEach var="museum" items="${ museums}">
-                    <option value="${museum.id}">${museum.name}</option>
-                </c:forEach>
-            </select>
-        </div>
+                    <c:forEach var="museum" items="${ museums}">
+                        <option value="${museum.id}">${museum.name}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </c:if>
 
         <div class="col-md-3">
             <label for="inputTitle" class="form-label">Título</label>
@@ -47,19 +49,17 @@
 
         <div class="col-md-3">
             <label for="inputBegin" class="form-label">Início da exibição</label>
-            <input type="date" name="begin" class="form-control" id="inputBegin" value="${requestScope.begin}"
-                   required>
+            <input type="date" name="begin" class="form-control" id="inputBegin" value="${requestScope.begin}" required>
         </div>
 
         <div class="col-md-3">
             <label for="inputEnd" class="form-label">Fim da exibição</label>
-            <input type="date" name="end" class="form-control" id="inputEnd" value="${requestScope.end}"
-                   required>
+            <input type="date" name="end" class="form-control" id="inputEnd" value="${requestScope.end}" required>
         </div>
 
         <div class="col-12">
             <label for="inputDetails" class="form-label">Detalhes</label>
-            <textarea type="text" name="details" class="form-control" id="inputDetails" required>
+            <textarea type="text" name="details" class="form-control" rows="8" id="inputDetails" required>
                 ${requestScope.details}
             </textarea>
         </div>

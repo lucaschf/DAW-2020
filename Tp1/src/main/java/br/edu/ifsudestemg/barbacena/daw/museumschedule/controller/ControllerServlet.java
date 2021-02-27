@@ -21,7 +21,7 @@ public class ControllerServlet extends HttpServlet {
         try {
             Class<?> targetClass = Class.forName(className);
             Logic logic = (Logic) targetClass.getConstructor().newInstance();
-            logic.execute(request, response);
+            request.getRequestDispatcher(logic.execute(request, response)).forward(request, response);
         } catch (Exception e) {
             throw new ServletException("Business logic caused an exception", e);
         }

@@ -167,42 +167,121 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_user_role_before_insert BEFORE INSERT ON users
 	FOR EACH ROW EXECUTE FUNCTION check_user_data_before_insert();
 
-	
-DROP FUNCTION visitors_per_day_time_by_museum;
-CREATE OR REPLACE FUNCTION visitors_per_day_time_by_museum(visit_date DATE, visit_time TIME, museumId BIGINT) RETURNS TABLE(
-	schedule_id INTEGER,
-	cpf CHARACTER VARYING(11),
-	name CHARACTER VARYING(100),
-	attended BOOLEAN,
-	ticket_type INTEGER,
-	schedule_number TEXT,
-	schedule_date DATE,
-	schedule_time TIME,
-	scheduler_email CHARACTER VARYING(50),
-	museum_name CHARACTER VARYING(255)
-)  AS $$
-	BEGIN
-		RETURN QUERY SELECT
-			schedule.id,
-			visitor.cpf,
-			visitor.name,
-			visitor.attended, 
-			visitor.ticket_type,
-			schedule.code,
-			schedule.schedule_date,
-			schedule.schedule_time,
-			schedule.scheduler_email,
-			museum.name as museum_name
-		FROM schedule 
-		INNER JOIN visitor ON visitor.schedule_id = schedule.id
-		INNER JOIN museum ON museum.id = schedule.museum_id
-		WHERE schedule.schedule_date = visit_date AND schedule.schedule_time = visit_time AND schedule.museum_id = museumId
-		ORDER BY schedule.schedule_time
+
+
+CREATE TYPE report_entry as (
+	schedule_id integer,
+	cpf character varying,
+	name character varying, 
+	attended boolean,
+	ticket_type integer, 
+	schedule_number text,
+	schedule_date date, 
+	schedule_time time without time zone,
+	scheduler_email character varying, 
+	museum_name character varying
+); 
+
+DROP FUNCTION visitors_per_day_time;
+
+CREATE OR REPLACE FUNCTION public.visitors_per_day_time(
+	visit_date date,
+	visit_time time without time zone,
+	museumid bigint
+) RETURNS SETOF report_entry
+AS $$
+BEGIN
+		IF museumId IS NOT NULL THEN 
+			RETURN QUERY SELECT
+				schedule.id,
+				visitor.cpf,
+				visitor.name,
+				visitor.attended, 
+				visitor.ticket_type,
+				schedule.code,
+				schedule.schedule_date,
+				schedule.schedule_time,
+				schedule.scheduler_email,
+				museum.name as museum_name
+			FROM schedule 
+			INNER JOIN visitor ON visitor.schedule_id = schedule.id
+			INNER JOIN museum ON museum.id = schedule.museum_id
+			WHERE schedule.schedule_date = visit_date AND schedule.schedule_time = visit_time AND schedule.museum_id = museumId
+			ORDER BY schedule.schedule_time;
+		ELSE 
+			RETURN QUERY SELECT
+					schedule.id,
+					visitor.cpf,
+					visitor.name,
+					visitor.attended, 
+					visitor.ticket_type,
+					schedule.code,
+					schedule.schedule_date,
+					schedule.schedule_time,
+					schedule.scheduler_email,
+					museum.name as museum_name
+				FROM schedule 
+				INNER JOIN visitor ON visitor.schedule_id = schedule.id
+				INNER JOIN museum ON museum.id = schedule.museum_id
+				WHERE schedule.schedule_date = visit_date AND schedule.schedule_time = visit_time
+				ORDER BY schedule.schedule_time;
+		END IF
 		;
 	END;
 $$ LANGUAGE PLPGSQL;
 
-SELECT * FROM visitors_per_day_time_by_museum('2021-02-27' , '11:00:00', 1)
+
+CREATE OR REPLACE FUNCTION public.visitors_who_attended_per_day(
+	visit_date DATE,
+	museumid BIGINT
+)
+    RETURNS SETOF report_entry
+AS $$
+BEGIN
+		IF museumId IS NOT NULL THEN 
+			RETURN QUERY SELECT
+				schedule.id,
+				visitor.cpf,
+				visitor.name,
+				visitor.attended, 
+				visitor.ticket_type,
+				schedule.code,
+				schedule.schedule_date,
+				schedule.schedule_time,
+				schedule.scheduler_email,
+				museum.name as museum_name
+			FROM schedule 
+			INNER JOIN visitor ON visitor.schedule_id = schedule.id
+			INNER JOIN museum ON museum.id = schedule.museum_id
+			WHERE schedule.schedule_date = visit_date AND schedule.museum_id = museumId AND visitor.attended
+			ORDER BY schedule.schedule_time;
+		ELSE 
+			RETURN QUERY SELECT
+					schedule.id,
+					visitor.cpf,
+					visitor.name,
+					visitor.attended, 
+					visitor.ticket_type,
+					schedule.code,
+					schedule.schedule_date,
+					schedule.schedule_time,
+					schedule.scheduler_email,
+					museum.name as museum_name
+				FROM schedule 
+				INNER JOIN visitor ON visitor.schedule_id = schedule.id
+				INNER JOIN museum ON museum.id = schedule.museum_id
+				WHERE schedule.schedule_date = visit_date AND visitor.attended
+				ORDER BY schedule.schedule_time;
+		END IF
+		;
+	END;
+$$ LANGUAGE PLPGSQL;
+
+
+
+SELECT * FROM visitors_per_day_time('2021-02-27' , '11:00:00', 2)
+
+SELECT * FROM visitors_who_attended_per_day('2021-02-28', NULL);
 
 INSERT INTO public.museum(
 	name, opens_at, closes_at, visitors_at_time, minutes_between_visits)

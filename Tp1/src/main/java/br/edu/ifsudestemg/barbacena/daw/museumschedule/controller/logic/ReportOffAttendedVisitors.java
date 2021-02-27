@@ -7,25 +7,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-public class ReportByDateTime implements Logic {
+public class ReportOffAttendedVisitors implements Logic {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         var date = LocalDate.parse(request.getParameter("date"));
-        var time = LocalTime.parse(request.getParameter("time"));
         Long museumId = null;
         User user = getCurrentUser(request);
 
-        if (!user.isSystemAdmin())
-            museumId = getCurrentUser(request).getEmployee().getId();
+        if(!user.isSystemAdmin())
+            museumId = getCurrentUser(request).getEmployee().getMuseum().getId();
 
         request.setAttribute("date", date);
-        request.setAttribute("time", time);
         request.setAttribute("museum_id", museumId);
 
-        return PagesNames.REPORT_VISITORS_BY_DATE_TIME;
+        return PagesNames.REPORT_VISITORS_BY_DATE;
     }
 
     private User getCurrentUser(HttpServletRequest request) {

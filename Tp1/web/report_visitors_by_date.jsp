@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Visitantes por dia/hora</title>
+    <title>Visitantes que compareceram por data</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
@@ -18,7 +18,7 @@
 <c:import url="header.jsp"/>
 
 <div class="container">
-    <h2 class="mt-5 mb-3">Relatório de visitantes por dia/hora</h2>
+    <h2 class="mt-5 mb-3">Relatório de visitantes por dia</h2>
     <hr class="mb-5"/>
 
     <c:if test="${sessionScope.user.systemAdmin}">
@@ -28,16 +28,11 @@
     </c:if>
 
     <form class="row g-3" action="scheduler" method="post">
-        <input type="hidden" name="logic" value="ReportByDateTime"/>
+        <input type="hidden" name="logic" value="ReportOffAttendedVisitors"/>
 
         <div class="col-md-3">
             <label for="inputDate" class="form-label">Data</label>
             <input type="date" name="date" class="form-control" id="inputDate" value="${requestScope.date}" required>
-        </div>
-
-        <div class="col-md-3">
-            <label for="inputTime" class="form-label">Horário</label>
-            <input type="time" name="time" class="form-control" id="inputTime" value="${requestScope.time}" required>
         </div>
 
         <div class="col-12 pb-3">
@@ -47,7 +42,7 @@
 
     <c:if test="${not empty requestScope.date}">
         <c:set var="entries"
-               value="${reportDao.generateReportByMuseumInDayAndTime(requestScope.date, requestScope.time, requestScope.museum_id)}"/>
+               value="${reportDao.reportOfAttendedVisitorsByMuseumInDay(requestScope.date, requestScope.museum_id)}"/>
 
         <%@include file="visitors_report_entries_table.jsp" %>
     </c:if>

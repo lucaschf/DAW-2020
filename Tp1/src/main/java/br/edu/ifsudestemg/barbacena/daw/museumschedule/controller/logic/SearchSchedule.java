@@ -1,5 +1,6 @@
 package br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.logic;
 
+import br.edu.ifsudestemg.barbacena.daw.museumschedule.controller.PagesNames;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.dao.ScheduleDao;
 import br.edu.ifsudestemg.barbacena.daw.museumschedule.model.Message;
 
@@ -12,10 +13,7 @@ import static br.edu.ifsudestemg.barbacena.daw.museumschedule.util.Constants.NO_
 public class SearchSchedule implements Logic {
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String sourcePage = "/search_schedule.jsp";
-        String nextPage = "/schedule_edit.jsp";
-
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         var email = request.getParameter("email");
         var confirmationCode = request.getParameter("confirmationCode");
 
@@ -25,18 +23,15 @@ public class SearchSchedule implements Logic {
             request.setAttribute("email", email);
             request.setAttribute("confirmationCode", confirmationCode);
             request.setAttribute(MESSAGE_PARAM, new Message(NO_SCHEDULE_FOUND));
-            request.getRequestDispatcher(sourcePage).forward(request, response);
-
-            return;
+            return PagesNames.SCHEDULE_SEARCH;
         }
 
         var scheduleDateTime = schedule.getDate().atTime(schedule.getHours());
-
         if (LocalDateTime.now().isAfter(scheduleDateTime)) {
             request.setAttribute(MESSAGE_PARAM, new Message(NO_SCHEDULE_FOUND));
         }
 
         request.setAttribute("schedule", schedule);
-        request.getRequestDispatcher(nextPage).forward(request, response);
+        return PagesNames.SCHEDULE_EDIT;
     }
 }

@@ -22,7 +22,7 @@
     <span class="fw-bold mb-2">
         Em exibição de ${attraction.beginningExhibition.format(formatter.brazilianDateFormatter)}
         a
-        ${attraction.endExhibition.format(formatter.brazilianDateFormatter)} em
+        ${attraction.endExhibition.format(formatter.brazilianDateFormatter)} no
         ${attraction.museum.name}
     </span>
 

@@ -13,7 +13,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
     <div class="container-fluid">
         <img src="images/logo_.png" alt="" class="logo">
-        <a class="navbar-brand" href="index.jsp">Navbar</a>
+        <a class="navbar-brand" href="index.jsp">Início</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -26,7 +26,9 @@
                         Agendamentos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
-
+                        <c:if test="${sessionScope.user != null}">
+                            <li><a class="dropdown-item" href="schedules_list.jsp">Consulta</a></li>
+                        </c:if>
                         <li><a class="dropdown-item" href="schedule_museum_select.jsp">Novo Agendamento</a></li>
                         <li><a class="dropdown-item" href="search_schedule.jsp">Editar</a></li>
                     </ul>
@@ -66,8 +68,10 @@
                             Relatórios
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="reportDropdown">
-                            <li><a class="dropdown-item" href="report_visitors_by_date_time.jsp">Visitantes por dia</a></li>
-                            <li><a class="dropdown-item" href="employee_registration.jsp">Visitantes por data</a></li>
+                            <li><a class="dropdown-item" href="report_visitors_by_date_time.jsp">Visitantes por dia</a>
+                            </li>
+                            <li><a class="dropdown-item" href="report_visitors_by_date.jsp">Visitantes que compareceram
+                                por data</a></li>
                         </ul>
                     </li>
 
@@ -78,9 +82,9 @@
                                  class="rounded-circle"
                                  height="22"
                                  alt=""/>
+                                ${sessionScope.user.username}
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="loggedUserDropdown">
-                            <li class="nav-item p-2"> Logado como ${sessionScope.user.username}</li>
                             <li><a class="nav-link" aria-current="page" href="scheduler?logic=Logout">Logout</a></li>
                         </ul>
                     </li>

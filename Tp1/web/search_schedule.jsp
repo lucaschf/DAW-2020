@@ -20,7 +20,7 @@
     <%@include file="message.jsp" %>
 
     <form class="row g-3" action="scheduler" method="post">
-        <input type="hidden" name="logic" value="SearchScheduleForEdit"/>
+        <input type="hidden" name="logic" value="SearchSchedule"/>
 
         <div class="col-md-3">
             <label for="inputConfirmationCode" class="form-label">Código de confirmação</label>
