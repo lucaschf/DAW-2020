@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Schedule {
     private long id;
@@ -120,11 +119,6 @@ public class Schedule {
         return schedulerEmail.equals(schedule.schedulerEmail) &&
                 date.equals(schedule.date) &&
                 hours.equals(schedule.hours);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(schedulerEmail, date, hours);
     }
 
     @Override

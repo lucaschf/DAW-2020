@@ -1,7 +1,6 @@
-CREATE TABLE email_sender_credentials
-(
+CREATE TABLE email_sender_credentials(
     email character varying(255) PRIMARY KEY,
-    pass character varying(255) NOT NULL,
+    pass character varying(255) NOT NULL
 );
 
 CREATE TABLE museum(
@@ -61,6 +60,16 @@ CREATE TABLE users(
 	role_id INTEGER REFERENCES role(id) ON DELETE CASCADE,
 	employee_id INTEGER NULL REFERENCES employee(id) ON DELETE CASCADE,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE attractions (
+    id SERIAL PRIMARY KEY,
+    title CHARACTER VARYING(200) NOT NULL,
+    details TEXT  NOT NULL,
+    cover_url TEXT  NOT NULL,
+    museum_id INTEGER REFERENCES museum(id) ON DELETE CASCADE,
+    beginning_exhibition DATE NOT NULL,
+    end_exhibition DATE NOT NULL
 );
 
 CREATE OR REPLACE FUNCTION booked_visitors(museumId BIGINT, _date DATE) RETURNS TABLE(
@@ -167,7 +176,59 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER check_user_role_before_insert BEFORE INSERT ON users
 	FOR EACH ROW EXECUTE FUNCTION check_user_data_before_insert();
 
+CREATE OR REPLACE FUNCTION generate_schedule_confirmation_code() RETURNS TRIGGER AS $$
+	BEGIN 
+		NEW.code := 'MSC' || md5(row(NEW.scheduler_email, NEW.schedule_date, NEW.schedule_time )::TEXT);
+		RETURN NEW;
+	END;
+$$ LANGUAGE plpgsql;
 
+
+CREATE TRIGGER tg_generate_confirmation_code BEFORE INSERT ON schedule
+	FOR EACH ROW EXECUTE FUNCTION generate_schedule_confirmation_code();
+	
+
+CREATE OR REPLACE FUNCTION is_email_booked(
+	targetemail character varying,
+	targetdate date,
+	targettime time without time zone)
+    RETURNS boolean
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE 
+		booked INTEGER;
+		
+	BEGIN 
+		SELECT COUNT(schedule.scheduler_email) FROM schedule 
+		WHERE schedule.schedule_date = targetDate AND schedule.schedule_time = targetTime AND schedule.scheduler_email LIKE targetEmail INTO booked;
+		
+		RETURN booked > 0;
+	END;
+$BODY$;
+
+
+CREATE OR REPLACE FUNCTION is_cpf_booked(
+	targetcpf character varying,
+	targetdate date,
+	targettime time without time zone)
+    RETURNS boolean
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+DECLARE 
+		booked INTEGER;
+		
+	BEGIN 
+		SELECT COUNT(visitor.cpf) FROM visitor 
+			INNER JOIN schedule ON schedule.id = visitor.schedule_id
+		WHERE schedule.schedule_date = targetDate AND schedule.schedule_time = targetTime AND visitor.cpf LIKE targetCpf INTO booked;
+		
+		RETURN booked > 0;
+	END;
+$BODY$;
 
 CREATE TYPE report_entry as (
 	schedule_id integer,
@@ -182,9 +243,8 @@ CREATE TYPE report_entry as (
 	museum_name character varying
 ); 
 
-DROP FUNCTION visitors_per_day_time;
 
-CREATE OR REPLACE FUNCTION public.visitors_per_day_time(
+CREATE OR REPLACE FUNCTION visitors_per_day_time(
 	visit_date date,
 	visit_time time without time zone,
 	museumid bigint
@@ -231,7 +291,7 @@ BEGIN
 $$ LANGUAGE PLPGSQL;
 
 
-CREATE OR REPLACE FUNCTION public.visitors_who_attended_per_day(
+CREATE OR REPLACE FUNCTION visitors_who_attended_per_day(
 	visit_date DATE,
 	museumid BIGINT
 )
@@ -278,11 +338,6 @@ BEGIN
 $$ LANGUAGE PLPGSQL;
 
 
-
-SELECT * FROM visitors_per_day_time('2021-02-27' , '11:00:00', 2)
-
-SELECT * FROM visitors_who_attended_per_day('2021-02-28', NULL);
-
 INSERT INTO public.museum(
 	name, opens_at, closes_at, visitors_at_time, minutes_between_visits)
 	VALUES 
@@ -316,3 +371,73 @@ INSERT INTO public.users(
 	username, password, role_id, employee_id)
 	VALUES ('admin', 'admin', 1, NULL);
 
+
+INSERT INTO attractions(title, details, cover_url, museum_id, beginning_exhibition end_exhibition) VALUES 
+		(
+			'Mumificação', 
+			'Sem dúvida, as múmias mais famosas foram as egípcias, mas isso não quer dizer que o método usado no Egito antigo foi a única forma de conservação de cadáveres. Conheça os tipos de mumificação existentes em diferentes culturas:
+
+			Cultura Americana
+
+			Em países como Colômbia, Equador, Bolívia e Peru, as múmias históricas foram conservadas graças ao clima seco e frio característico dessas regiões. Em algumas, o processo foi facilitado pela retirada das vísceras e óleos injetados, mas em outros casos, não se fazia esse tratamento prévio, e mesmo assim as múmias foram eternizadas.
+
+			Cultura Oriental
+
+			Na China, Tibete e Japão, o método era feito assim: o corpo era mergulhado em solução aquosa conservante, em seguida, todo o sangue do corpo era retirado (e substituído por álcool) e, por último, um banho com arsênico. Acredita-se que uns dos componentes da solução aquosa eram mercúrio e chumbo.
+
+			Cultura Católica
+
+			Em Palermo (Itália) e México existem muito segredos acerca da conservação de cadáveres, se não fosse por um vestígio deixado nos túmulos: a presença de cal. A cal pode formar uma espécie de filme sobre o corpo, isolando-o da terra. O processo é mantido em segredo pelos freis, mas uma coisa é certa, as catacumbas são gélidas e secas, o que contribuiu em muito para a mumificação.
+
+			Cultura Egípcia
+
+			A mais conhecida das técnicas começava com a retirada do cérebro e vísceras, em seguida o corpo era levado para a secagem. Feito isso, partia-se para a desidratação do cadáver, onde sais de natrão eram aplicados para agilizar o processo (este durava cerca de 70 dias). Por último, se enrolavam as faixas características das múmias.',
+		 	'https://cdn.pixabay.com/photo/2015/09/11/04/23/mummy-935258_960_720.jpg',
+		 	1,
+		 	'2021-02-15',
+		 	'2021-05-20'
+		 ),
+
+		(
+			'Nefertiti', 
+			'Nascida no ano de 1380 a.C., Nefertiti, cujo nome significa ‘a mais bela chegou’, foi uma rainha egípcia da XVIII dinastia que se tornou notável por ser a esposa do faraó Amenhotep IV, conhecido como Akhenaton, responsável por substituir o culto politeísta pela reverência a um deus único, o rei-sol Aton.
+
+			Com Akhenaton, Nefertiti teve seis filhas entre os nove anos de reinado do marido. São elas: Meritaton, Meketaton, Ankhesenpaaton, Neferneferuaton, Neferneferuré e Setepenré. Porém, ao longo do reinado egípcio de Akhenaton, três de suas filhas sucumbiram com o alastramento de uma peste da malária, que era conhecida como “doença mágica” por seu poder de devastação. Mais uma das filhas do casal, Meketaton, morreria cedo em decorrência de um afogamento acidental.
+
+			Apesar de ser um símbolo de beleza fascinante mesmo na atualidade, pouco se sabe sobre a vida de Nefertiti. Ela teve uma irmã que se chamava Mutnedjemet e foi criada pela ama Tiy, que era casada com um funcionário da nobre corte, até conhecer e casar-se muito jovem com o faraó Akhenaton.
+
+			A rainha teve grande importância na disseminação do culto monoteísta junto ao seu marido, pois era uma das únicas que podia reverenciar e interceder diretamente com o rei-sol Athon. No reinado de Akhenaton, o faraó e a rainha eram responsáveis pela realização dos cultos e eram figuras representativas dessa divindade, fortalecendo os laços com a população.
+
+			Por sua grande popularidade, alguns historiadores defendem a tese de que Nefertiti tenha sido alvo de assassinato de alguns sacerdotes que defendiam o politeísmo. Outros especialistas, ainda, acreditam que ela tenha se tornado co-regente de Akhenaton, acumulando mais poder. Essa última tese é levantada graças a uma imagem em bloco de pedra onde a rainha aparece golpeando um inimigo com uma maça, remetendo à ideia de força.
+
+			Entretanto, sabe-se que após o término do reinado de seu marido, Nefertiti sumiu misteriosamente, pois poucas escrituras e imagens retratam esse período de sua vida. Alguns arqueólogos estimam que ela tenha morrido no ano de 1345 a.C.
+
+			Em dezembro de 1912, os alemães acharam em sua terra natal uma escultura que identificaram como o ‘busto de Nefertiti’, obra que tornou-se a principal referência estética de sua beleza e austeridade que marcou o período do Egito Antigo. Atualmente, a obra pertence ao Museu de Berlim, na Alemanha.',
+		 	'https://cdn.pixabay.com/photo/2017/07/22/22/14/nefertiti-2530055_960_720.jpg',
+		 	1,
+		 	'2021-02-15',
+		 	'2021-05-20'
+		 ),
+		
+		(
+			'Nefertiti', 
+			'Nascida no ano de 1380 a.C., Nefertiti, cujo nome significa ‘a mais bela chegou’, foi uma rainha egípcia da XVIII dinastia que se tornou notável por ser a esposa do faraó Amenhotep IV, conhecido como Akhenaton, responsável por substituir o culto politeísta pela reverência a um deus único, o rei-sol Aton.
+
+			Com Akhenaton, Nefertiti teve seis filhas entre os nove anos de reinado do marido. São elas: Meritaton, Meketaton, Ankhesenpaaton, Neferneferuaton, Neferneferuré e Setepenré. Porém, ao longo do reinado egípcio de Akhenaton, três de suas filhas sucumbiram com o alastramento de uma peste da malária, que era conhecida como “doença mágica” por seu poder de devastação. Mais uma das filhas do casal, Meketaton, morreria cedo em decorrência de um afogamento acidental.
+
+			Apesar de ser um símbolo de beleza fascinante mesmo na atualidade, pouco se sabe sobre a vida de Nefertiti. Ela teve uma irmã que se chamava Mutnedjemet e foi criada pela ama Tiy, que era casada com um funcionário da nobre corte, até conhecer e casar-se muito jovem com o faraó Akhenaton.
+
+			A rainha teve grande importância na disseminação do culto monoteísta junto ao seu marido, pois era uma das únicas que podia reverenciar e interceder diretamente com o rei-sol Athon. No reinado de Akhenaton, o faraó e a rainha eram responsáveis pela realização dos cultos e eram figuras representativas dessa divindade, fortalecendo os laços com a população.
+
+			Por sua grande popularidade, alguns historiadores defendem a tese de que Nefertiti tenha sido alvo de assassinato de alguns sacerdotes que defendiam o politeísmo. Outros especialistas, ainda, acreditam que ela tenha se tornado co-regente de Akhenaton, acumulando mais poder. Essa última tese é levantada graças a uma imagem em bloco de pedra onde a rainha aparece golpeando um inimigo com uma maça, remetendo à ideia de força.
+
+			Entretanto, sabe-se que após o término do reinado de seu marido, Nefertiti sumiu misteriosamente, pois poucas escrituras e imagens retratam esse período de sua vida. Alguns arqueólogos estimam que ela tenha morrido no ano de 1345 a.C.
+
+			Em dezembro de 1912, os alemães acharam em sua terra natal uma escultura que identificaram como o ‘busto de Nefertiti’, obra que tornou-se a principal referência estética de sua beleza e austeridade que marcou o período do Egito Antigo. Atualmente, a obra pertence ao Museu de Berlim, na Alemanha.',
+		 	'https://cdn.pixabay.com/photo/2017/07/22/22/14/nefertiti-2530055_960_720.jpg',
+		 	2,
+		 	'2021-02-15',
+		 	'2021-05-20'
+		 );
+		
+	;

@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>User list</title>
+    <title>Listagem de usuários</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
@@ -29,6 +29,7 @@
                 <th>Ação</th>
                 <th>Usuário</th>
                 <th>Cargo</th>
+                <th>Museu</th>
             </tr>
             <c:forEach var="u" items="${users}">
                 <tr>
@@ -43,6 +44,11 @@
                     </td>
                     <td>${u.username}</td>
                     <td>${u.role}</td>
+                    <td>
+                        <c:if test="${!u.systemAdmin}">
+                            ${u.employee.museum.name}
+                        </c:if>
+                    </td>
                 </tr>
             </c:forEach>
         </table>

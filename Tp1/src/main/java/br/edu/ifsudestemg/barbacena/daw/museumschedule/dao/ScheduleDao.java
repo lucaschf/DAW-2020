@@ -37,12 +37,10 @@ public class ScheduleDao extends DAO {
 
     public boolean add(Schedule schedule) {
         final String query = String.format("INSERT INTO %s(scheduler_email, schedule_date, schedule_time," +
-                        " visitors, museum_id, code, termsAcceptanceDate) VALUES( ?, ?, ?, ?, ?, ?, ?) RETURNING %s.id",
+                        " visitors, museum_id, termsAcceptanceDate) VALUES( ?, ?, ?, ?, ?, ?) RETURNING %s.id",
                 tableName,
                 tableName
         );
-
-        schedule.setConfirmationCode("MSC" + schedule.hashCode());
 
         try (PreparedStatement statement = getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, schedule.getSchedulerEmail());
@@ -50,8 +48,7 @@ public class ScheduleDao extends DAO {
             statement.setTime(3, Time.valueOf(schedule.getHours()));
             statement.setInt(4, schedule.getVisitorsCount());
             statement.setLong(5, schedule.getMuseum().getId());
-            statement.setString(6, schedule.getConfirmationCode());
-            statement.setTimestamp(7, Timestamp.valueOf(schedule.getTermsAcceptanceDate()));
+            statement.setTimestamp(6, Timestamp.valueOf(schedule.getTermsAcceptanceDate()));
 
             int affectedRows = statement.executeUpdate();
 

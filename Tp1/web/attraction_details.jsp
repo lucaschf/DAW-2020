@@ -5,7 +5,7 @@
 <jsp:useBean id="formatter" class="br.edu.ifsudestemg.barbacena.daw.museumschedule.util.FormatterUtils"/>
 <html>
 <head>
-    <title>Museum Schedule</title>
+    <title>Detalhes da atração</title>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
